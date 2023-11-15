@@ -1,7 +1,7 @@
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
-
+/* 
 @font-face {
 	font-family: "esamanruBold";
 	src: url("./assets/fonts/esamanruBold.ttf");
@@ -47,7 +47,7 @@ const GlobalStyle = createGlobalStyle`
   src: url('./assets/fonts/SpoqaHanSansNeoRegular.ttf');
   font-weight: normal;
   font-style: normal;
-}
+} */
 
 
 html, body, div, span, applet, object, iframe,
