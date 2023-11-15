@@ -179,7 +179,9 @@ const Main = () => {
                 <Item x={itemArr[0].x} y={itemArr[0].y} bgColor={itemArr[0].bgColor} />
                 {itemArr.map((item, index) => {
                     return (
-                        <Item onClick={showModal(index)} ref={el => itemsRef.current[index] = el} x={item.x} y={item.y} bgColor={item.bgColor} key={index} />
+                        <Item onClick={showModal(index)} ref={el => itemsRef.current[index] = el} x={item.x} y={item.y} bgColor={item.bgColor} key={index}>
+                            <div>{item.content}</div>
+                        </Item>
                     )
                 })}
             </Background>
