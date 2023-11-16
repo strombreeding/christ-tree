@@ -29,22 +29,23 @@ const Background = styled.div<IDivProps>`
   background-position: center;
 `;
 
-const Item = styled.div<{ x: string; y: string; bgColor: string }>`
+const Item = styled.div<{ x: string; y: string }>`
   font-size: larger;
   position: absolute;
   width: 100px;
   height: 100px;
   top: ${(props) => props.y}px;
   left: ${(props) => props.x}px;
-  background-color: ${(props) => props.bgColor};
   z-index: 1;
+  background-color: red;
+  cursor: pointer;
 `;
 
 const NewPrayBtn = styled.div`
   position: sticky;
   display: flex;
-  width: 300px;
-  height: 100px;
+  width: 100px;
+  height: 30px;
   background-color: green;
   top: 0px;
   left: 50%;
@@ -60,14 +61,29 @@ const MobileNewPrayBtn = styled(NewPrayBtn)`
     height: 50px;
   }
 `;
+
+const ItemImg = styled.img`
+  width: 100px;
+  aspect-ratio: 1;
+  z-index: 2;
+  background-color: red;
+`;
+const ItemText = styled.div`
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 100px;
+  white-space: nowrap;
+`;
+
 const Main = () => {
-  const [scrollPosition, setScrollPosition] = useState(0);
+  // const [scrollPosition, setScrollPosition] = useState(0);
   const [y, setY] = useState(0);
   const [x, setX] = useState(0);
   const [text, setText] = useState("");
   const [itemModal, setItemModal] = useState(false);
   const [prayModal, setPrayModal] = useState(false);
-
+  const [index, setIndex] = useState(0);
+  const [data, setData] = useState([] as any[]);
   const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
 
   const showItemModal = useCallback(
@@ -81,22 +97,34 @@ const Main = () => {
         console.log(itemRect.left);
         setX(itemRect.left);
         setItemModal(true);
+        setPrayModal(false);
+        setIndex(index);
       } else {
+        setPrayModal(false);
         setItemModal(false);
+        setIndex(index);
         setY(0);
         setX(0);
       }
     },
     []
   );
-  const showPrayModal = () => () => {
+  const showPrayModal = () => {
     console.log("프레이");
     setPrayModal(true);
   };
 
   useEffect(() => {
+    req();
     itemsRef.current = itemsRef.current.slice(0, itemArr.length);
   }, []);
+
+  const req = async () => {
+    // 통신 되면
+    // const data = await anyFunction();
+    const data = itemArr;
+    setData([...data]);
+  };
 
   const scrollToItem = (index: number, itemClick?: boolean) => () => {
     const item = itemsRef.current[index];
@@ -133,10 +161,17 @@ const Main = () => {
         height="5000"
         bgImage="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FZYFBv%2Fbtrn1gmFpGU%2F5p27RLkfXr0w8OdBG751CK%2Fimg.png"
       >
-        <NewPrayBtn onClick={() => setPrayModal(true)}>
-          <div>기도제목 쓰기</div>
+        <NewPrayBtn onClick={showPrayModal}>
+          <div>쓰기</div>
         </NewPrayBtn>
-        <Modal.ItemModal show={itemModal} setModal={setItemModal} y={y} x={x} />
+        <Modal.ItemModal
+          show={itemModal}
+          setModal={setItemModal}
+          y={y}
+          x={x}
+          data={data}
+          index={index}
+        />
         <Modal.PrayModal
           show={prayModal}
           setPrayModal={setPrayModal}
@@ -144,7 +179,13 @@ const Main = () => {
           x={x}
         />
         <input
-          style={{ width: "100%", height: 100, fontSize: 100 }}
+          style={{
+            width: "100%",
+            height: 50,
+            fontSize: 50,
+            position: "absolute",
+            top: 0,
+          }}
           type="text"
           //   defaultValue={""}
           defaultValue={text}
@@ -153,10 +194,15 @@ const Main = () => {
           }}
         />
         <div
-          style={{ backgroundColor: "red", width: "100%", height: 100 }}
+          style={{
+            backgroundColor: "red",
+            width: "100%",
+            height: 50,
+            position: "absolute",
+            top: 50,
+          }}
           onClick={scrollToItem(Number(text))}
         ></div>
-        <Item x={itemArr[0].x} y={itemArr[0].y} bgColor={itemArr[0].bgColor} />
         {itemArr.map((item, index) => {
           return (
             <Item
@@ -164,9 +210,14 @@ const Main = () => {
               ref={(el) => (itemsRef.current[index] = el)}
               x={item.x}
               y={item.y}
-              bgColor={item.bgColor}
               key={index}
-            />
+            >
+              <ItemImg src={item.imgPath} />
+              <ItemText style={{ textAlign: "center" }}>
+                {item.nickname}
+              </ItemText>
+              <ItemText>{item.content}</ItemText>
+            </Item>
           );
         })}
       </Background>
