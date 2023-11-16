@@ -11,7 +11,7 @@ import styled from "styled-components";
 import { itemArr } from "../config";
 import { isMobile } from "react-device-detect";
 import * as Modal from "../components/Modal";
-
+import backImg from "../assets/backImg.jpg"
 interface IDivProps {
   width: string;
   height: string;
@@ -37,7 +37,6 @@ const Item = styled.div<{ x: string; y: string }>`
   top: ${(props) => props.y}px;
   left: ${(props) => props.x}px;
   z-index: 1;
-  background-color: red;
   cursor: pointer;
 `;
 
@@ -66,7 +65,6 @@ const ItemImg = styled.img`
   width: 100px;
   aspect-ratio: 1;
   z-index: 2;
-  background-color: red;
 `;
 const ItemText = styled.div`
   text-overflow: ellipsis;
@@ -159,7 +157,7 @@ const Main = () => {
       <Background
         width="5000"
         height="5000"
-        bgImage="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FZYFBv%2Fbtrn1gmFpGU%2F5p27RLkfXr0w8OdBG751CK%2Fimg.png"
+        bgImage={backImg}
       >
         <NewPrayBtn onClick={showPrayModal}>
           <div>쓰기</div>

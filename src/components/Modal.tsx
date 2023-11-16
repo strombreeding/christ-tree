@@ -62,13 +62,21 @@ export const ItemModal: FC<{
         x={String(x + 40)}
         y={String(y - 200)}
         isMobile={isMobile}
-        onClick={() => setModal(false)}
+        // onClick={() => setModal(false)}
       >
         <ModalContent>
-          <div style={{ padding: 30 }}>닉네임</div>
+          <img style={{width:100,aspectRatio:1}} src={data[index].imgPath}/>
           <div>{data[index].nickname}</div>
           <div style={{ padding: 30 }}>기도제목 상세</div>
-          <div>{data[index].content}</div>
+          <textarea
+            readOnly
+            placeholder="기도할거리"
+            defaultValue={data[index].content}
+            // onChange={handleInputChange}
+            rows={1}
+            style={{ overflowY: "hidden", resize: "none", width:300,height:200 }}
+            maxLength={250}
+          />
         </ModalContent>
       </ModalDiv>
     </>
@@ -85,8 +93,8 @@ export const PrayModal: FC<{
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const handleInputChange = (e: any) => {
+    setContent(e.target.value);
     if (textareaRef.current) {
-      setContent(e.target.value);
       textareaRef.current.style.height = "auto";
       textareaRef.current.style.height =
         textareaRef.current.scrollHeight + "px";
@@ -109,12 +117,11 @@ export const PrayModal: FC<{
           />
           <div style={{ paddingTop: 30, paddingBottom: 10 }}>기도제목 상세</div>
           <textarea
-            ref={textareaRef}
             placeholder="기도할거리"
             defaultValue={content}
             onChange={handleInputChange}
             rows={1}
-            style={{ overflowY: "hidden", resize: "none" }}
+            style={{ overflowY: "hidden", resize: "none", width:300,height:200 }}
             maxLength={250}
           />
           <div style={{ marginTop: 5 }}>{content.length}/250</div>
