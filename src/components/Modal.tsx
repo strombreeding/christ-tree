@@ -3,6 +3,7 @@ import { isMobile } from "react-device-detect";
 import { styled } from "styled-components";
 import { IItemProps, itemImg } from "../config";
 import { getCards } from "../apis/read";
+import { insertCard } from "../apis/create";
 
 interface IModalDivProps {
   isMobile?: boolean;
@@ -160,7 +161,12 @@ export const PrayModal: FC<{
 
   const confirm = async() => {
     // 통신
-    await getCards()
+    await insertCard(
+      {nickname,
+      content,
+      imgPath:img}
+    )
+    window.dispatchEvent(new Event('MainRefresh'));
     modalOff()
   }
 

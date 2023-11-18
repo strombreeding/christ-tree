@@ -125,12 +125,18 @@ const Main = () => {
 
   useEffect(() => {
     req();
-    itemsRef.current = itemsRef.current.slice(0, itemArr.list.length);
+    
+    const listener = window.addEventListener("MainRefresh",req)
+    return ()=> {
+      window.removeEventListener("MainRefresh",req)
+    }
   }, []);
 
   const req = async () => {
     // 통신 되면
     // const data = await anyFunction();
+    alert("통신")
+    itemsRef.current = itemsRef.current.slice(0, itemArr.list.length);
     const res = await getCards()
     console.log(res)
     const data = itemArr;
