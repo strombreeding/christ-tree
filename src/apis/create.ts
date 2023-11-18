@@ -7,7 +7,7 @@ export const insertCard = async(data:{
 })=>{
     console.log(SERVER_URL+"cards")
     try{
-        const result = await axios.post(SERVER_URL+"cards",data)
+        const result = await axios.post(SERVER_URL+"cards/",data)
         if(result.status !== 200){
             throw new Error("데이터 못받아옴")
         }
