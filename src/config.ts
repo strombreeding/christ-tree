@@ -1,10 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
 export interface IItemProps {
-  id:string
-  x: string;
-  y: string;
+  id:number
+  ornament_x: string;
+  ornament_y: string;
   imgPath: string;
-  nickname: string;
+  writer: string;
   content:string
 }
 console.log(process.env.REACT_APP_IMAGE_PATH); // 콘솔에서 확인

@@ -1,18 +1,8 @@
-import {
-  Dispatch,
-  FC,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { imagePath, itemArr } from "../config";
+import { IItemProps, imagePath, itemArr } from "../config";
 import { isMobile } from "react-device-detect";
 import * as Modal from "../components/Modal";
-import backImg from "../assets/backImg.jpg";
-import ff from "../assets/tree_1.png";
 import { getCards } from "../apis/read";
 interface IDivProps {
   width: number;
@@ -43,7 +33,6 @@ const Item = styled.div<{ x: string; y: string; selectItem: boolean }>`
   border-radius: 25px;
   cursor: pointer;
 `;
-console.log(window.innerWidth);
 const NaviContainer = styled.div<{ isMobile: boolean; screenWidth: number }>`
   position: sticky;
   display: flex;
@@ -106,19 +95,16 @@ const Main = () => {
   // const [scrollPosition, setScrollPosition] = useState(0);
   const [text, setText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
-
   const [screenWidth] = useState(window.innerWidth);
-  const [y, setY] = useState(0);
-  const [x, setX] = useState(0);
   const [itemModal, setItemModal] = useState(false);
   const [prayModal, setPrayModal] = useState(false);
   const [index, setIndex] = useState(0);
-  const [selectItem, setSelectItem] = useState("");
+  const [selectItem, setSelectItem] = useState(0);
   const [data, setData] = useState(
     {} as {
       x: number;
       y: number;
-      list: any[];
+      list: IItemProps[];
       week: number;
     }
   );
@@ -126,15 +112,15 @@ const Main = () => {
   const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
   const handleSearch = () => {
     const matchingItems = data.list.filter((item) =>
-      item.nickname.includes(text)
+      item.writer.includes(text)
     );
 
     if (matchingItems.length > 0) {
       const item = matchingItems[currentIndex % matchingItems.length];
       setSelectItem(matchingItems[currentIndex % matchingItems.length].id);
 
-      const xPosition = item.x - window.innerWidth / 2;
-      const yPosition = item.y - window.innerHeight / 2;
+      const xPosition = Number(item.ornament_x) - window.innerWidth / 2;
+      const yPosition = Number(item.ornament_y) - window.innerHeight / 2;
 
       // 부드러운 스크롤 이동
       window.scrollTo({
@@ -147,15 +133,9 @@ const Main = () => {
     }
   };
   const showItemModal = (index: number) => () => {
-    console.log(index);
     const item = itemsRef.current[index];
     if (item && !itemModal) {
       const itemRect = item.getBoundingClientRect();
-      const scrollOffsetX = (itemRect.left + itemRect.right) / 3;
-      const scrollOffsetY = (itemRect.top + itemRect.bottom) / 3;
-      setY(itemRect.top);
-      console.log(itemRect.left);
-      setX(itemRect.left);
       setItemModal(true);
       setPrayModal(false);
       setIndex(index);
@@ -163,8 +143,6 @@ const Main = () => {
       setPrayModal(false);
       setItemModal(false);
       setIndex(index);
-      setY(0);
-      setX(0);
     }
     console.log(data.list);
     setSelectItem(data.list[index].id);
@@ -178,7 +156,7 @@ const Main = () => {
   useEffect(() => {
     req();
 
-    const listener = window.addEventListener("MainRefresh", req);
+    window.addEventListener("MainRefresh", req);
     return () => {
       window.removeEventListener("MainRefresh", req);
     };
@@ -186,13 +164,11 @@ const Main = () => {
 
   const req = async () => {
     // 통신 되면
-    // const data = await anyFunction();
-    alert("통신");
-    itemsRef.current = itemsRef.current.slice(0, itemArr.list.length);
     const res = await getCards();
+    itemsRef.current = itemsRef.current.slice(0, res.list.length);
     console.log(res);
-    const data = itemArr;
-    setData(data);
+    // const data = itemArr;
+    setData(res);
   };
   const handleSubmit = (event: any) => {
     event.preventDefault(); // 폼의 기본 제출 동작을 방지
@@ -208,7 +184,6 @@ const Main = () => {
       handleSearch();
     }
   };
-  console.log(selectItem);
   return (
     <>
       <Background
@@ -260,31 +235,27 @@ const Main = () => {
         <Modal.ItemModal
           show={itemModal}
           setModal={setItemModal}
-          y={y}
-          x={x}
           data={data.list}
           index={index}
         />
         <Modal.PrayModal
           show={prayModal}
           setPrayModal={setPrayModal}
-          y={y}
-          x={x}
           dataList={data.list}
           setSelectItem={setSelectItem}
         />
 
-        {itemArr.list.map((item, index) => {
+        {data.list.map((item, index) => {
           return (
             <Item
               onClick={showItemModal(index)}
               ref={(el) => (itemsRef.current[index] = el)}
-              x={item.x}
-              y={item.y}
+              x={item.ornament_x}
+              y={item.ornament_y}
               key={item.id}
               selectItem={item.id === selectItem}
             >
-              <div id={item.id}></div>
+              <div id={item.id.toString()}></div>
               <ItemImg src={item.imgPath} />
               <div
                 style={{
@@ -303,7 +274,7 @@ const Main = () => {
                     fontSize: 18,
                   }}
                 >
-                  {item.nickname}
+                  {item.writer}
                 </ItemText>
               </div>
             </Item>

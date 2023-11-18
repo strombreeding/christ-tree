@@ -1,7 +1,7 @@
 import axios from "axios"
 import { SERVER_URL } from "./constant"
 export const insertCard = async(data:{
-    nickname:string
+    writer:string
     content:string
     imgPath:string
 })=>{

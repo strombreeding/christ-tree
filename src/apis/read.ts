@@ -7,7 +7,7 @@ export const getCards = async()=>{
         if(result.status !== 200){
             throw new Error("데이터 못받아옴")
         }
-        return result
+        return result.data
     }catch(err){
         return false
     }

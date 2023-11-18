@@ -7,8 +7,6 @@ import { insertCard } from "../apis/create";
 
 interface IModalDivProps {
   isMobile?: boolean;
-  y?: string;
-  x: string;
 }
 const ModalDiv = styled.div<IModalDivProps>`
   position: sticky;
@@ -16,8 +14,6 @@ const ModalDiv = styled.div<IModalDivProps>`
   width: ${(props) => (props.isMobile ? 360 : 600)}px;
   height: ${(props) => (props.isMobile ? 600 : 600)}px;
   background-color: purple;
-  /* top: ${(props) => (props.isMobile ? props.y : 50)}px;
-  left: ${(props) => (props.isMobile ? props.x + "px" : "50%")}; */
   top: ${(props) => (props.isMobile ? 60 : 100)}px;
   left: 50%;
   transform: translateX(-50%);
@@ -58,28 +54,21 @@ const ModalTextArea = styled.textarea<{ isMobile: boolean }>`
 export const ItemModal: FC<{
   show: boolean;
   setModal: Dispatch<SetStateAction<boolean>>;
-  y: number;
-  x: number;
   data: IItemProps[];
   index: number;
-}> = ({ show, setModal, y, x, data, index }) => {
+}> = ({ show, setModal, data, index }) => {
   if (!show) return <div></div>;
 
   return (
     <>
       <ModalBg onClick={() => setModal(false)} />
-      <ModalDiv
-        x={String(x + 40)}
-        y={String(y - 200)}
-        isMobile={isMobile}
-        // onClick={() => setModal(false)}
-      >
+      <ModalDiv isMobile={isMobile}>
         <ModalContent>
           <img
             style={{ width: 100, aspectRatio: 1 }}
             src={data[index].imgPath}
           />
-          <div>{data[index].nickname}</div>
+          <div>{data[index].writer}</div>
           <div style={{ padding: 30 }}>기도제목 상세</div>
           <ModalTextArea
             disabled
@@ -157,14 +146,12 @@ const SearchBtn = styled.button`
 export const PrayModal: FC<{
   show: boolean;
   setPrayModal: Dispatch<SetStateAction<boolean>>;
-  setSelectItem: Dispatch<SetStateAction<string>>;
-  y: number;
-  x: number;
+  setSelectItem: Dispatch<SetStateAction<number>>;
   dataList: any[];
-}> = ({ show, setPrayModal, y, x, dataList, setSelectItem }) => {
+}> = ({ show, setPrayModal, dataList, setSelectItem }) => {
   const [text, setText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [nickname, setNickname] = useState("");
+  const [writer, setWriter] = useState("");
   const [content, setContent] = useState("");
   const [img, setImg] = useState<string>("");
   const [type, setType] = useState<
@@ -185,20 +172,18 @@ export const PrayModal: FC<{
     setType("final");
     setContent("");
     setImg("");
-    setNickname("");
+    setWriter("");
   };
 
   const confirm = async () => {
     // 통신
-    await insertCard({ nickname, content, imgPath: img });
+    await insertCard({ writer, content, imgPath: img });
     window.dispatchEvent(new Event("MainRefresh"));
     modalOff();
   };
 
   const handleSearch = () => {
-    const matchingItems = dataList.filter((item) =>
-      item.nickname.includes(text)
-    );
+    const matchingItems = dataList.filter((item) => item.writer.includes(text));
 
     if (matchingItems.length > 0) {
       const item = matchingItems[currentIndex % matchingItems.length];
@@ -231,7 +216,7 @@ export const PrayModal: FC<{
   return (
     <>
       <ModalBg onClick={modalOff} />
-      <ModalDiv x={String(x + 40)} y={String(y - 200)} isMobile={isMobile}>
+      <ModalDiv isMobile={isMobile}>
         {type === "choice" && (
           <ModalContent>
             <div style={{ fontWeight: "700", fontSize: 20, marginBottom: 20 }}>
@@ -271,9 +256,9 @@ export const PrayModal: FC<{
             <input
               maxLength={9}
               placeholder="닉네임"
-              defaultValue={nickname}
+              defaultValue={writer}
               onChange={(e) => {
-                setNickname(e.currentTarget.value);
+                setWriter(e.currentTarget.value);
               }}
             />
             <div style={{ paddingTop: 30, paddingBottom: 10 }}>
