@@ -3,7 +3,7 @@ import { SERVER_URL } from "./constant"
 export const insertCard = async(data:{
     writer:string
     content:string
-    imgPath:string
+    img_path:string
 })=>{
     console.log(SERVER_URL+"cards")
     try{

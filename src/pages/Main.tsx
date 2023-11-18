@@ -1,13 +1,28 @@
-import { useEffect, useRef, useState } from "react";
+import {
+  Dispatch,
+  FC,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import styled from "styled-components";
-import { IItemProps, imagePath, itemArr } from "../config";
+import { IItemProps, imagePath } from "../config";
 import { isMobile } from "react-device-detect";
 import * as Modal from "../components/Modal";
+import backImg from "../assets/backImg.jpg";
+import ff from "../assets/tree_1.png";
 import { getCards } from "../apis/read";
 interface IDivProps {
   width: number;
   height: number;
   bgImage?: string;
+}
+
+interface IDataProps {
+  count: number;
+  results: IItemProps[];
 }
 const Background = styled.div<IDivProps>`
   max-width: 5000px;
@@ -33,6 +48,7 @@ const Item = styled.div<{ x: string; y: string; selectItem: boolean }>`
   border-radius: 25px;
   cursor: pointer;
 `;
+console.log(window.innerWidth);
 const NaviContainer = styled.div<{ isMobile: boolean; screenWidth: number }>`
   position: sticky;
   display: flex;
@@ -95,23 +111,17 @@ const Main = () => {
   // const [scrollPosition, setScrollPosition] = useState(0);
   const [text, setText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [ready, setReady] = useState(false);
   const [screenWidth] = useState(window.innerWidth);
   const [itemModal, setItemModal] = useState(false);
   const [prayModal, setPrayModal] = useState(false);
   const [index, setIndex] = useState(0);
   const [selectItem, setSelectItem] = useState(0);
-  const [data, setData] = useState(
-    {} as {
-      x: number;
-      y: number;
-      list: IItemProps[];
-      week: number;
-    }
-  );
+  const [data, setData] = useState({} as IDataProps);
 
   const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
   const handleSearch = () => {
-    const matchingItems = data.list.filter((item) =>
+    const matchingItems = data.results.filter((item) =>
       item.writer.includes(text)
     );
 
@@ -133,9 +143,13 @@ const Main = () => {
     }
   };
   const showItemModal = (index: number) => () => {
+    console.log(index);
     const item = itemsRef.current[index];
     if (item && !itemModal) {
       const itemRect = item.getBoundingClientRect();
+      // const scrollOffsetX = (itemRect.left + itemRect.right) / 3;
+      // const scrollOffsetY = (itemRect.top + itemRect.bottom) / 3;
+      console.log(itemRect.left);
       setItemModal(true);
       setPrayModal(false);
       setIndex(index);
@@ -144,8 +158,8 @@ const Main = () => {
       setItemModal(false);
       setIndex(index);
     }
-    console.log(data.list);
-    setSelectItem(data.list[index].id);
+    console.log(data.results);
+    setSelectItem(data.results[index].id);
   };
 
   const showPrayModal = () => {
@@ -156,7 +170,7 @@ const Main = () => {
   useEffect(() => {
     req();
 
-    window.addEventListener("MainRefresh", req);
+    const listener = window.addEventListener("MainRefresh", req);
     return () => {
       window.removeEventListener("MainRefresh", req);
     };
@@ -164,11 +178,14 @@ const Main = () => {
 
   const req = async () => {
     // 통신 되면
+    // const data = await anyFunction();
+    alert("통신");
     const res = await getCards();
-    itemsRef.current = itemsRef.current.slice(0, res.list.length);
     console.log(res);
+    itemsRef.current = itemsRef.current.slice(0, res.results.length);
     // const data = itemArr;
     setData(res);
+    setReady(true);
   };
   const handleSubmit = (event: any) => {
     event.preventDefault(); // 폼의 기본 제출 동작을 방지
@@ -184,12 +201,13 @@ const Main = () => {
       handleSearch();
     }
   };
+  if (!ready) return <></>;
   return (
     <>
       <Background
-        width={data.x}
-        height={data.y}
-        bgImage={`${imagePath}/tree_${data.week}.png`}
+        width={5000}
+        height={5000}
+        bgImage={`${imagePath}/tree_${data.results[0].week}.png`}
       >
         <NaviContainer isMobile={isMobile} screenWidth={screenWidth}>
           <NaviBtn bgColor="blue">
@@ -235,17 +253,17 @@ const Main = () => {
         <Modal.ItemModal
           show={itemModal}
           setModal={setItemModal}
-          data={data.list}
+          data={data.results}
           index={index}
         />
         <Modal.PrayModal
           show={prayModal}
           setPrayModal={setPrayModal}
-          dataList={data.list}
+          dataList={data.results}
           setSelectItem={setSelectItem}
         />
 
-        {data.list.map((item, index) => {
+        {data.results.map((item, index) => {
           return (
             <Item
               onClick={showItemModal(index)}
@@ -255,8 +273,8 @@ const Main = () => {
               key={item.id}
               selectItem={item.id === selectItem}
             >
-              <div id={item.id.toString()}></div>
-              <ItemImg src={item.imgPath} />
+              <div id={String(item.id)}></div>
+              <ItemImg src={item.img_path} />
               <div
                 style={{
                   backgroundColor: "black",

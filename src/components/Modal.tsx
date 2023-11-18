@@ -66,7 +66,7 @@ export const ItemModal: FC<{
         <ModalContent>
           <img
             style={{ width: 100, aspectRatio: 1 }}
-            src={data[index].imgPath}
+            src={data[index].img_path}
           />
           <div>{data[index].writer}</div>
           <div style={{ padding: 30 }}>기도제목 상세</div>
@@ -147,16 +147,14 @@ export const PrayModal: FC<{
   show: boolean;
   setPrayModal: Dispatch<SetStateAction<boolean>>;
   setSelectItem: Dispatch<SetStateAction<number>>;
-  dataList: any[];
+  dataList: IItemProps[];
 }> = ({ show, setPrayModal, dataList, setSelectItem }) => {
   const [text, setText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [writer, setWriter] = useState("");
   const [content, setContent] = useState("");
   const [img, setImg] = useState<string>("");
-  const [type, setType] = useState<
-    "guide" | "write" | "search" | "choice" | "final"
-  >("final");
+  const [type, setType] = useState<"choice" | "final">("final");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const handleInputChange = (e: any) => {
     setContent(e.target.value);
@@ -177,7 +175,7 @@ export const PrayModal: FC<{
 
   const confirm = async () => {
     // 통신
-    await insertCard({ writer, content, imgPath: img });
+    await insertCard({ writer, content, img_path: img });
     window.dispatchEvent(new Event("MainRefresh"));
     modalOff();
   };
@@ -198,8 +196,8 @@ export const PrayModal: FC<{
       //         return;
       //       }
       // 화면 중앙에 위치시키기 위한 계산
-      const xPosition = item.x - window.innerWidth / 2;
-      const yPosition = item.y - window.innerHeight / 2;
+      const xPosition = Number(item.ornament_x) - window.innerWidth / 2;
+      const yPosition = Number(item.ornament_y) - window.innerHeight / 2;
 
       // 부드러운 스크롤 이동
       window.scrollTo({
@@ -281,20 +279,6 @@ export const PrayModal: FC<{
                 제출
               </ModalBtn>
             </BtnContainer>
-          </ModalContent>
-        )}
-
-        {type === "search" && (
-          <ModalContent>
-            <SearchInput
-              type="text"
-              //   defaultValue={""}
-              defaultValue={text}
-              onChange={(e) => {
-                setText(e.currentTarget.value);
-              }}
-            />
-            <SearchBtn onClick={handleSearch}>Search!</SearchBtn>
           </ModalContent>
         )}
       </ModalDiv>
