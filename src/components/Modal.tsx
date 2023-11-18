@@ -10,9 +10,6 @@ interface IModalDivProps {
   y?: string;
   x: string;
 }
-const bodyWidth = document.body.clientWidth;
-const bodyHeight = document.body.clientHeight;
-console.log(window.innerWidth, document.documentElement.scrollWidth);
 const ModalDiv = styled.div<IModalDivProps>`
   position: sticky;
   display: flex;
@@ -21,7 +18,7 @@ const ModalDiv = styled.div<IModalDivProps>`
   background-color: purple;
   /* top: ${(props) => (props.isMobile ? props.y : 50)}px;
   left: ${(props) => (props.isMobile ? props.x + "px" : "50%")}; */
-  top: 100px;
+  top: ${(props) => (props.isMobile ? 60 : 100)}px;
   left: 50%;
   transform: translateX(-50%);
   /* transform: translate(-50%, ${(props) => (props.isMobile ? 50 : 0)}%); */
@@ -51,6 +48,13 @@ const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
+const ModalTextArea = styled.textarea<{ isMobile: boolean }>`
+  overflow: hidden;
+  resize: none;
+  width: ${(props) => (props.isMobile ? "70%" : "300px")};
+  height: 200px;
+`;
 export const ItemModal: FC<{
   show: boolean;
   setModal: Dispatch<SetStateAction<boolean>>;
@@ -71,17 +75,19 @@ export const ItemModal: FC<{
         // onClick={() => setModal(false)}
       >
         <ModalContent>
-          <img style={{width:100,aspectRatio:1}} src={data[index].imgPath}/>
+          <img
+            style={{ width: 100, aspectRatio: 1 }}
+            src={data[index].imgPath}
+          />
           <div>{data[index].nickname}</div>
           <div style={{ padding: 30 }}>기도제목 상세</div>
-          <textarea
-          disabled
+          <ModalTextArea
+            disabled
             readOnly
             placeholder="기도할거리"
             defaultValue={data[index].content}
-            // onChange={handleInputChange}
             rows={1}
-            style={{ overflowY: "hidden", resize: "none", width:isMobile?275 : 300,height:200 }}
+            isMobile={isMobile}
             maxLength={250}
           />
         </ModalContent>
@@ -90,57 +96,80 @@ export const ItemModal: FC<{
   );
 };
 
-
-
-
-
-
- const ChoiceType  = styled.button<{backColor:string}>`
+const ChoiceType = styled.button<{ backColor: string }>`
   padding: 20px;
   margin-top: 10px;
   margin-bottom: 10px;
   width: 50%;
-  background-color: ${(props)=>props.backColor};
+  background-color: ${(props) => props.backColor};
   border-width: 0px;
   border-radius: 10px;
   cursor: pointer;
   color: white;
   font-size: 20px;
   font-weight: 700;
- `
+`;
 
 const ItemContainer = styled.div`
-    width: 25%;
-    padding: 10px;
-    transition: background-color 0.3s ease, opacity 0.6s ease;
-    cursor: pointer;
-    &:hover {
-      background-color: black;
-      opacity: 1; // 마우스 오버 시 투명도 증가
-    }
-`
+  width: 33%;
+  padding: 10px;
+  transition: background-color 0.3s ease, opacity 0.6s ease;
+  cursor: pointer;
+  &:hover {
+    background-color: black;
+    opacity: 1; // 마우스 오버 시 투명도 증가
+  }
+`;
 
 const ItemImg = styled.img`
   width: 100%;
   aspect-ratio: 1;
   z-index: 2;
 `;
-
-
+const BtnContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  position: fixed;
+  bottom: 70px;
+  width: 50%;
+  justify-content: space-between;
+`;
+const ModalBtn = styled.button<{ bgColor: string; textColor: string }>`
+  padding: 15px;
+  background-color: ${(props) => props.bgColor};
+  color: ${(props) => props.textColor};
+  border-radius: 4px;
+`;
+const SearchInput = styled.input`
+  width: 50%;
+  height: 50px;
+  font-size: 35px;
+  text-align: center;
+`;
+const SearchBtn = styled.button`
+  background-color: purple;
+  width: 50%;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  padding: 30px;
+`;
 export const PrayModal: FC<{
   show: boolean;
   setPrayModal: Dispatch<SetStateAction<boolean>>;
   setSelectItem: Dispatch<SetStateAction<string>>;
   y: number;
   x: number;
-  dataList:any[]
-}> = ({ show, setPrayModal, y, x,dataList,setSelectItem }) => {
-   const [text, setText] = useState('');
+  dataList: any[];
+}> = ({ show, setPrayModal, y, x, dataList, setSelectItem }) => {
+  const [text, setText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [nickname, setNickname] = useState("");
   const [content, setContent] = useState("");
-  const [img, setImg] = useState<string>("")
-  const [type, setType] = useState<"guide"|"write"|"search"|"choice"|"final">('guide')
+  const [img, setImg] = useState<string>("");
+  const [type, setType] = useState<
+    "guide" | "write" | "search" | "choice" | "final"
+  >("final");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const handleInputChange = (e: any) => {
     setContent(e.target.value);
@@ -151,42 +180,38 @@ export const PrayModal: FC<{
     }
   };
 
-  const modalOff = ()=>{
-    setPrayModal(false)
-    setType("guide")
-    setContent("")
-    setImg("")
-    setNickname("")
-  }
+  const modalOff = () => {
+    setPrayModal(false);
+    setType("final");
+    setContent("");
+    setImg("");
+    setNickname("");
+  };
 
-  const confirm = async() => {
+  const confirm = async () => {
     // 통신
-    await insertCard(
-      {nickname,
-      content,
-      imgPath:img}
-    )
-    window.dispatchEvent(new Event('MainRefresh'));
-    modalOff()
-  }
-
-
+    await insertCard({ nickname, content, imgPath: img });
+    window.dispatchEvent(new Event("MainRefresh"));
+    modalOff();
+  };
 
   const handleSearch = () => {
-    const matchingItems = dataList.filter(item => item.nickname.includes(text));
+    const matchingItems = dataList.filter((item) =>
+      item.nickname.includes(text)
+    );
 
     if (matchingItems.length > 0) {
       const item = matchingItems[currentIndex % matchingItems.length];
-      setSelectItem(matchingItems[currentIndex % matchingItems.length].id)
-//  if (isMobile) {
-//         item.scrollIntoView({
-//           behavior: "smooth",
-//           block: "center",
-//           inline: "center",
-//         });
-//         modalOff()
-//         return;
-//       }
+      setSelectItem(matchingItems[currentIndex % matchingItems.length].id);
+      //  if (isMobile) {
+      //         item.scrollIntoView({
+      //           behavior: "smooth",
+      //           block: "center",
+      //           inline: "center",
+      //         });
+      //         modalOff()
+      //         return;
+      //       }
       // 화면 중앙에 위치시키기 위한 계산
       const xPosition = item.x - window.innerWidth / 2;
       const yPosition = item.y - window.innerHeight / 2;
@@ -195,196 +220,99 @@ export const PrayModal: FC<{
       window.scrollTo({
         left: xPosition,
         top: yPosition,
-        behavior: 'smooth'
+        behavior: "smooth",
       });
       // 다음 검색을 위해 인덱스 업데이트
-      setCurrentIndex(prev => prev + 1);
+      setCurrentIndex((prev) => prev + 1);
     }
   };
-  
+
   if (!show) return <div></div>;
   return (
     <>
       <ModalBg onClick={modalOff} />
       <ModalDiv x={String(x + 40)} y={String(y - 200)} isMobile={isMobile}>
-        {type === "write" && 
+        {type === "choice" && (
           <ModalContent>
-            <div style={{ paddingTop: 30, paddingBottom: 10 }}>닉네임</div>
+            <div style={{ fontWeight: "700", fontSize: 20, marginBottom: 20 }}>
+              장식품 고르기
+            </div>
+            <div style={{ display: "flex", flexWrap: "wrap" }}>
+              {itemImg.map((img, index) => {
+                return (
+                  <ItemContainer
+                    onClick={() => {
+                      setType("final");
+                      setImg(img);
+                    }}
+                  >
+                    <ItemImg src={img} alt="none" />
+                  </ItemContainer>
+                );
+              })}
+            </div>
+          </ModalContent>
+        )}
+        {type === "final" && (
+          <ModalContent>
+            <ItemContainer
+              style={{ marginTop: -40 }}
+              onClick={() => {
+                setType("choice");
+              }}
+            >
+              {img.length > 2 ? (
+                <ItemImg src={img} alt="none" />
+              ) : (
+                <ItemImg></ItemImg>
+              )}
+            </ItemContainer>
+            <div style={{ paddingTop: 0, paddingBottom: 10 }}>닉네임</div>
             <input
+              maxLength={9}
               placeholder="닉네임"
               defaultValue={nickname}
               onChange={(e) => {
                 setNickname(e.currentTarget.value);
               }}
             />
-            <div style={{ paddingTop: 30, paddingBottom: 10 }}>기도제목 상세</div>
-            <textarea
+            <div style={{ paddingTop: 30, paddingBottom: 10 }}>
+              기도제목 상세
+            </div>
+            <ModalTextArea
+              isMobile={isMobile}
               placeholder="기도할거리"
               defaultValue={content}
               onChange={handleInputChange}
               rows={1}
-              style={{ overflowY: "hidden", resize: "none", width:300,height:200 }}
               maxLength={250}
             />
             <div style={{ marginTop: 5 }}>{content.length}/250</div>
-
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                position: "fixed",
-                bottom: 100,
-                width: "30%",
-                justifyContent: "space-between",
-              }}
-            >
-              <div
-                style={{ padding: 15, backgroundColor: "red", color: "silver" }}
-                onClick={() => {
-                  setType("guide");
-                }}
-              >
+            <BtnContainer>
+              <ModalBtn textColor="silver" bgColor="red" onClick={modalOff}>
                 취소
-              </div>
-              <div
-                style={{ padding: 15, backgroundColor: "blue", color: "silver" }}
-                onClick={()=>{setType("choice")}}
-              >
-                다음
-              </div>
-            </div>
-          </ModalContent>}
-        {type === "guide" && 
-          <ModalContent>
-              <ChoiceType onClick={()=>{
-                setType("search")
-              }} backColor="green">검색</ChoiceType>  
-              <ChoiceType onClick={()=>{
-                setType("write")
-              }} backColor="blue">쓰기</ChoiceType>  
-          </ModalContent>
-        }
-
-        {type === "choice" &&
-          <ModalContent>
-            <div style={{fontWeight:"700", fontSize:20, marginBottom:20}}>장식품 고르기</div>
-            <div style={{display:"flex" , flexWrap:"wrap"}}>
-              {itemImg.map((img,index)=>{
-                return <ItemContainer onClick={()=>{
-                  setType("final")
-                  setImg(img)
-                }} ><ItemImg src={img} alt="none" /></ItemContainer>
-              })}
-            </div>
-          </ModalContent>
-        }
-
-        {type === "final" &&
- <ModalContent>
-          <ItemContainer style={{marginTop:-10}} onClick={()=>{setType('choice')}}>
-            <ItemImg src={img} alt="none"/>
-          </ItemContainer>
-          <div style={{marginBottom:5}}/>
-          <div>{nickname}</div>
-          <div style={{ padding: 15 }}></div>
-          <textarea
-            readOnly
-            placeholder="기도할거리"
-            defaultValue={content}
-            // onChange={handleInputChange}
-            rows={1}
-            style={{ overflowY: "hidden", resize: "none", width:300,height:200 }}
-            maxLength={250}
-            disabled
-          />
-               <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                position: "fixed",
-                bottom: 70,
-                width: "30%",
-                justifyContent: "space-between",
-              }}
-            >
-              <div
-                style={{ padding: 15, backgroundColor: "red", color: "silver" ,borderRadius:4}}
-                onClick={() => {
-                  setType("guide");
-                }}
-              >
-                취소
-              </div>
-              <div
-                style={{ padding: 15, backgroundColor: "blue", color: "silver",borderRadius:4 }}
-                onClick={confirm}
-              >
+              </ModalBtn>
+              <ModalBtn textColor="silver" bgColor="blue" onClick={confirm}>
                 제출
-              </div>
-            </div>
-        </ModalContent>
-        }
+              </ModalBtn>
+            </BtnContainer>
+          </ModalContent>
+        )}
 
-        {type ==="search" &&
-        <ModalContent>
-           <input
-          style={{
-            width: "50%",
-            height: 50,
-            fontSize: 35,
-            textAlign:"center"
-          }}
-          type="text"
-          //   defaultValue={""}
-          defaultValue={text}
-          onChange={(e) => {
-            setText(e.currentTarget.value);
-          }}
-        />
-        <div
-          style={{
-            backgroundColor: "red",
-            width: "50%",
-            alignItems:"center",
-            textAlign:"center",
-            justifyContent:"center",
-            padding:30
-          }}
-          onClick={handleSearch}
-        >Search!</div>
-        </ModalContent>
-        }
+        {type === "search" && (
+          <ModalContent>
+            <SearchInput
+              type="text"
+              //   defaultValue={""}
+              defaultValue={text}
+              onChange={(e) => {
+                setText(e.currentTarget.value);
+              }}
+            />
+            <SearchBtn onClick={handleSearch}>Search!</SearchBtn>
+          </ModalContent>
+        )}
       </ModalDiv>
     </>
   );
 };
-
-//   const scrollToItem = (index: number, itemClick?: boolean) => () => {
-  //   const item = itemsRef.current[index];
-  //   if (item) {
-  //     // 모바일일때 이동
-  //     if (isMobile) {
-  //       item.scrollIntoView({
-  //         behavior: "smooth",
-  //         block: "center",
-  //         inline: "center",
-  //       });
-  //       modalOff()
-  //       return;
-  //     }
-  //     // 웹에서 이동
-  //     const itemRect = item.getBoundingClientRect();
-  //     const itemCenterX = (itemRect.left + itemRect.right) / 2;
-  //     const itemCenterY = (itemRect.top + itemRect.bottom) / 2;
-  //     const windowCenterX = window.innerWidth / 2;
-  //     const windowCenterY = window.innerHeight / 2;
-  //     const scrollOffsetX = itemCenterX - windowCenterX;
-  //     const scrollOffsetY = itemCenterY - windowCenterY;
-  //     window.scrollTo({
-  //       left: scrollOffsetX,
-  //       top: scrollOffsetY,
-  //       behavior: "smooth",
-  //     });
-  //     modalOff()
-  //   }
-  // };
