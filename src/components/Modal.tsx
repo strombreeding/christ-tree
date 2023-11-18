@@ -175,29 +175,44 @@ export const PrayModal: FC<{
 
   const confirm = async () => {
     // 통신
-    await insertCard({ writer, content, img_path: img });
-    window.dispatchEvent(new Event("MainRefresh"));
-    modalOff();
+    try {
+      const res = await insertCard({ writer, content, img_path: img });
+      handleSearch(res!);
+      setTimeout(() => {
+        window.dispatchEvent(new Event("MainRefresh"));
+      }, 1000);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      modalOff();
+    }
   };
 
-  const handleSearch = () => {
-    const matchingItems = dataList.filter((item) => item.writer.includes(text));
+  const handleSearch = (custom?: IItemProps) => {
+    console.log(custom, !custom);
+    let matchingItems: IItemProps[] = [] as IItemProps[];
+    if (!custom) {
+      matchingItems = dataList.filter((item) => item.writer.includes(text));
+      if (matchingItems.length > 0) {
+        const item = matchingItems[currentIndex % matchingItems.length];
+        setSelectItem(matchingItems[currentIndex % matchingItems.length].id);
+        const xPosition = Number(item.ornament_x) - window.innerWidth / 2;
+        const yPosition = Number(item.ornament_y) - window.innerHeight / 2;
 
-    if (matchingItems.length > 0) {
-      const item = matchingItems[currentIndex % matchingItems.length];
+        // 부드러운 스크롤 이동
+        window.scrollTo({
+          left: xPosition,
+          top: yPosition,
+          behavior: "smooth",
+        });
+        // 다음 검색을 위해 인덱스 업데이트
+        setCurrentIndex((prev) => prev + 1);
+      }
+    } else {
+      console.log("실행!");
       setSelectItem(matchingItems[currentIndex % matchingItems.length].id);
-      //  if (isMobile) {
-      //         item.scrollIntoView({
-      //           behavior: "smooth",
-      //           block: "center",
-      //           inline: "center",
-      //         });
-      //         modalOff()
-      //         return;
-      //       }
-      // 화면 중앙에 위치시키기 위한 계산
-      const xPosition = Number(item.ornament_x) - window.innerWidth / 2;
-      const yPosition = Number(item.ornament_y) - window.innerHeight / 2;
+      const xPosition = Number(custom.ornament_x) - window.innerWidth / 2;
+      const yPosition = Number(custom.ornament_y) - window.innerHeight / 2;
 
       // 부드러운 스크롤 이동
       window.scrollTo({
