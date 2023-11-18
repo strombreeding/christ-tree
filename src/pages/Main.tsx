@@ -13,6 +13,7 @@ import { isMobile } from "react-device-detect";
 import * as Modal from "../components/Modal";
 import backImg from "../assets/backImg.jpg"
 import ff from "../assets/tree_1.png"
+import { getCards } from "../apis/read";
 interface IDivProps {
   width: number;
   height: number;
@@ -130,6 +131,8 @@ const Main = () => {
   const req = async () => {
     // 통신 되면
     // const data = await anyFunction();
+    const res = await getCards()
+    console.log(res)
     const data = itemArr;
     setData(data);
   };

@@ -2,6 +2,7 @@ import { Dispatch, FC, SetStateAction, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { styled } from "styled-components";
 import { IItemProps, itemImg } from "../config";
+import { getCards } from "../apis/read";
 
 interface IModalDivProps {
   isMobile?: boolean;
@@ -157,9 +158,9 @@ export const PrayModal: FC<{
     setNickname("")
   }
 
-  const confirm = () => {
+  const confirm = async() => {
     // 통신
-
+    await getCards()
     modalOff()
   }
 
