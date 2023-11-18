@@ -1,32 +1,33 @@
-import i2 from "./assets/IMG_0332.png"
-import i3 from "./assets/IMG_0333.png"
-import i4 from "./assets/IMG_0334.png"
-import i5 from "./assets/IMG_0335.png"
-import i6 from "./assets/IMG_0336.png"
-import i7 from "./assets/IMG_0337.png"
-import i8 from "./assets/IMG_0338.png"
-import i9 from "./assets/IMG_0339.png"
-import i0 from "./assets/IMG_0340.png"
+import { v4 as uuidv4 } from 'uuid';
 export interface IItemProps {
+  id:string
   x: string;
   y: string;
   imgPath: string;
   nickname: string;
   content:string
 }
+console.log(process.env.REACT_APP_IMAGE_PATH); // 콘솔에서 확인
+export const imagePath = process.env.REACT_APP_IMAGE_PATH;
 export const itemImg = [
-  i2,
-  i3,
-  i4,
-  i5,
-  i6,
-  i7,
-  i8,
-  i9,
-  i0,
+  `${imagePath}/IMG_${'0332'}.png`,
+  `${imagePath}/IMG_${'0333'}.png`,
+  `${imagePath}/IMG_${'0334'}.png`,
+  `${imagePath}/IMG_${'0335'}.png`,
+  `${imagePath}/IMG_${'0336'}.png`,
+  `${imagePath}/IMG_${'0337'}.png`,
+  `${imagePath}/IMG_${'0338'}.png`,
+  `${imagePath}/IMG_${'0339'}.png`,
+  `${imagePath}/IMG_${'0340'}.png`,
 ]
-export const itemArr = [
+
+export const itemArr = {
+  week:Math.floor(Math.random() * 3)+1,
+  x:5000,
+  y:5000,
+  list:[
   {
+    id:uuidv4(),
     x: "1000",
     y: "1000",
     imgPath:itemImg[0],
@@ -34,6 +35,7 @@ export const itemArr = [
     nickname: "일이삼사오육칠팔구십",
   },
   {
+    id:uuidv4(),
     x: "1500",
     y: "1000",
     imgPath:itemImg[1],
@@ -41,6 +43,7 @@ export const itemArr = [
     nickname: "123456",
   },
   {
+    id:uuidv4(),
     x: "2000",
     y: "1000",
     imgPath:itemImg[2],
@@ -48,6 +51,7 @@ export const itemArr = [
     nickname: "닉넴",
   },
   {
+    id:uuidv4(),
     x: "1000",
     y: "1500",
     imgPath:itemImg[3],
@@ -55,6 +59,7 @@ export const itemArr = [
     nickname: "기모링",
   },
   {
+    id:uuidv4(),
     x: "1000",
     y: "2000",
     imgPath:itemImg[4],
@@ -62,6 +67,7 @@ export const itemArr = [
     nickname: "와저씨",
   },
   {
+    id:uuidv4(),
     x: "1500",
     y: "1500",
     imgPath:itemImg[5],
@@ -69,6 +75,7 @@ export const itemArr = [
     nickname: "목데이터",
   },
   {
+    id:uuidv4(),
     x: "2000",
     y: "2000",
     imgPath:itemImg[6],
@@ -76,10 +83,12 @@ export const itemArr = [
     nickname: "목사님",
   },
   {
+    id:uuidv4(),
     x: "2500",
     y: "2500",
     imgPath:itemImg[7],
     content: "하잉82345678899912312421124",
     nickname: "아이폰",
   },
-];
+]
+}

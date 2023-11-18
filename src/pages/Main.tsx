@@ -8,13 +8,14 @@ import {
   useState,
 } from "react";
 import styled from "styled-components";
-import { itemArr } from "../config";
+import { imagePath, itemArr } from "../config";
 import { isMobile } from "react-device-detect";
 import * as Modal from "../components/Modal";
 import backImg from "../assets/backImg.jpg"
+import ff from "../assets/tree_1.png"
 interface IDivProps {
-  width: string;
-  height: string;
+  width: number;
+  height: number;
   bgImage?: string;
 }
 const Background = styled.div<IDivProps>`
@@ -23,13 +24,13 @@ const Background = styled.div<IDivProps>`
   width: ${(props) => props.width}px;
   height: ${(props) => props.height}px;
   background-color: lightblue;
-  background-image: ${(props) =>
-    props.bgImage ? `url(${props.bgImage})` : "none"};
+  background-image: url(${props => props.bgImage});
+  /* background-image: url(${props => props.bgImage}); */
   background-size: cover;
   background-position: center;
 `;
 
-const Item = styled.div<{ x: string; y: string }>`
+const Item = styled.div<{ x: string; y: string, selectItem:boolean }>`
   font-size: larger;
   position: absolute;
   width: 100px;
@@ -37,6 +38,8 @@ const Item = styled.div<{ x: string; y: string }>`
   top: ${(props) => props.y}px;
   left: ${(props) => props.x}px;
   z-index: 1;
+  background-color: ${props=>props.selectItem ===true? "gold" : ""};
+  border-radius: 25px;
   cursor: pointer;
 `;
 
@@ -77,15 +80,21 @@ const Main = () => {
   // const [scrollPosition, setScrollPosition] = useState(0);
   const [y, setY] = useState(0);
   const [x, setX] = useState(0);
-  const [text, setText] = useState("");
   const [itemModal, setItemModal] = useState(false);
   const [prayModal, setPrayModal] = useState(false);
   const [index, setIndex] = useState(0);
-  const [data, setData] = useState([] as any[]);
+  const [selectItem, setSelectItem] = useState("")
+  const [data, setData] = useState({} as {
+    x:number
+    y:number
+    list:any[]
+    week:number
+});
   const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
 
-  const showItemModal = useCallback(
+  const showItemModal = 
     (index: number) => () => {
+      console.log(index)
       const item = itemsRef.current[index];
       if (item && !itemModal) {
         const itemRect = item.getBoundingClientRect();
@@ -104,9 +113,10 @@ const Main = () => {
         setY(0);
         setX(0);
       }
-    },
-    []
-  );
+      console.log(data.list)
+      setSelectItem(data.list[index].id)
+    }
+
   const showPrayModal = () => {
     console.log("프레이");
     setPrayModal(true);
@@ -114,60 +124,33 @@ const Main = () => {
 
   useEffect(() => {
     req();
-    itemsRef.current = itemsRef.current.slice(0, itemArr.length);
+    itemsRef.current = itemsRef.current.slice(0, itemArr.list.length);
   }, []);
 
   const req = async () => {
     // 통신 되면
     // const data = await anyFunction();
     const data = itemArr;
-    setData([...data]);
+    setData(data);
   };
 
-  const scrollToItem = (index: number, itemClick?: boolean) => () => {
-    const item = itemsRef.current[index];
-    if (item) {
-      // 모바일일때 이동
-      if (isMobile) {
-        item.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-          inline: "center",
-        });
-        return;
-      }
-      // 웹에서 이동
-      const itemRect = item.getBoundingClientRect();
-      const itemCenterX = (itemRect.left + itemRect.right) / 2;
-      const itemCenterY = (itemRect.top + itemRect.bottom) / 2;
-      const windowCenterX = window.innerWidth / 2;
-      const windowCenterY = window.innerHeight / 2;
-      const scrollOffsetX = itemCenterX - windowCenterX;
-      const scrollOffsetY = itemCenterY - windowCenterY;
-      window.scrollTo({
-        left: scrollOffsetX,
-        top: scrollOffsetY,
-        behavior: "smooth",
-      });
-    }
-  };
-
+console.log(selectItem)
   return (
     <>
       <Background
-        width="5000"
-        height="5000"
-        bgImage={backImg}
+        width={data.x}
+        height={data.y}
+        bgImage={`${imagePath}/tree_${data.week}.png`}
       >
         <NewPrayBtn onClick={showPrayModal}>
-          <div>쓰기</div>
+          <div>가이드</div>
         </NewPrayBtn>
         <Modal.ItemModal
           show={itemModal}
           setModal={setItemModal}
           y={y}
           x={x}
-          data={data}
+          data={data.list}
           index={index}
         />
         <Modal.PrayModal
@@ -175,46 +158,27 @@ const Main = () => {
           setPrayModal={setPrayModal}
           y={y}
           x={x}
+          dataList={data.list}
+          setSelectItem = { setSelectItem}
         />
-        <input
-          style={{
-            width: "100%",
-            height: 50,
-            fontSize: 50,
-            position: "absolute",
-            top: 0,
-          }}
-          type="text"
-          //   defaultValue={""}
-          defaultValue={text}
-          onChange={(e) => {
-            setText(e.currentTarget.value);
-          }}
-        />
-        <div
-          style={{
-            backgroundColor: "red",
-            width: "100%",
-            height: 50,
-            position: "absolute",
-            top: 50,
-          }}
-          onClick={scrollToItem(Number(text))}
-        ></div>
-        {itemArr.map((item, index) => {
+       
+        {itemArr.list.map((item, index) => {
           return (
             <Item
               onClick={showItemModal(index)}
               ref={(el) => (itemsRef.current[index] = el)}
               x={item.x}
               y={item.y}
-              key={index}
+              key={item.id}
+              selectItem={item.id === selectItem}
             >
+              <div id={item.id}></div>
               <ItemImg src={item.imgPath} />
-              <ItemText style={{ textAlign: "center" }}>
+              <div style={{backgroundColor:"black", opacity:0.6,borderRadius:100,paddingTop:12, paddingBottom:12,}}>
+              <ItemText style={{ textAlign: "center",color:"white",fontWeight:"600",fontSize:18 }}>
                 {item.nickname}
               </ItemText>
-              <ItemText>{item.content}</ItemText>
+              </div>
             </Item>
           );
         })}
