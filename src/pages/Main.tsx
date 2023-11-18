@@ -61,6 +61,7 @@ const NaviContainer = styled.div<{ isMobile: boolean; screenWidth: number }>`
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
+  z-index: 100;
 `;
 const NaviBtn = styled.div<{ bgColor: string }>`
   display: flex;
