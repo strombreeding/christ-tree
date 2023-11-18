@@ -179,9 +179,8 @@ const Main = () => {
   const req = async () => {
     // 통신 되면
     // const data = await anyFunction();
-    alert("통신");
+    console.log("메인통신");
     const res = await getCards();
-    console.log(res);
     itemsRef.current = itemsRef.current.slice(0, res.results.length);
     // const data = itemArr;
     setData(res);

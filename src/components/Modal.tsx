@@ -178,9 +178,9 @@ export const PrayModal: FC<{
     try {
       const res = await insertCard({ writer, content, img_path: img });
       handleSearch(res!);
-      setTimeout(() => {
-        window.dispatchEvent(new Event("MainRefresh"));
-      }, 1000);
+      // setTimeout(() => {
+      //   window.dispatchEvent(new Event("MainRefresh"));
+      // }, 1000);
     } catch (err) {
       console.log(err);
     } finally {
@@ -189,7 +189,6 @@ export const PrayModal: FC<{
   };
 
   const handleSearch = (custom?: IItemProps) => {
-    console.log(custom, !custom);
     let matchingItems: IItemProps[] = [] as IItemProps[];
     if (!custom) {
       matchingItems = dataList.filter((item) => item.writer.includes(text));
@@ -210,7 +209,7 @@ export const PrayModal: FC<{
       }
     } else {
       console.log("실행!");
-      setSelectItem(matchingItems[currentIndex % matchingItems.length].id);
+      setSelectItem(custom.id);
       const xPosition = Number(custom.ornament_x) - window.innerWidth / 2;
       const yPosition = Number(custom.ornament_y) - window.innerHeight / 2;
 
