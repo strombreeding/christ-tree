@@ -140,6 +140,8 @@ const Main = () => {
       });
       // 다음 검색을 위해 인덱스 업데이트
       setCurrentIndex((prev) => prev + 1);
+    } else {
+      alert(`${text}가 들어있는 장식은 없다네 친구여`);
     }
   };
   const showItemModal = (index: number) => () => {

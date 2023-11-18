@@ -175,12 +175,16 @@ export const PrayModal: FC<{
 
   const confirm = async () => {
     // 통신
+    if (writer.trim().length < 2) return alert("닉넴을 2자 이상 입력하세요");
+    if (content.trim().length < 10)
+      return alert("기도제목이 10자도 안된다고요? 말도안돼~");
+    if (img.trim().length < 10) return alert("이미지 골라주셈");
     try {
       const res = await insertCard({ writer, content, img_path: img });
       handleSearch(res!);
-      // setTimeout(() => {
-      //   window.dispatchEvent(new Event("MainRefresh"));
-      // }, 1000);
+      setTimeout(() => {
+        window.dispatchEvent(new Event("MainRefresh"));
+      }, 600);
     } catch (err) {
       console.log(err);
     } finally {
