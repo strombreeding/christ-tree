@@ -8,7 +8,7 @@ import {
   useState,
 } from "react";
 import styled from "styled-components";
-import { IItemProps, imagePath } from "../config";
+import { IItemProps, imagePath, itemArr } from "../config";
 import { isMobile } from "react-device-detect";
 import * as Modal from "../components/Modal";
 import backImg from "../assets/backImg.jpg";
@@ -26,8 +26,8 @@ interface IDataProps {
   results: IItemProps[];
 }
 const Background = styled.div<IDivProps>`
-  max-width: 5000px;
-  max-height: 5000px;
+  max-width: 3000px;
+  max-height: 3000px;
   width: ${(props) => props.width}px;
   height: ${(props) => props.height}px;
   background-color: lightblue;
@@ -65,8 +65,7 @@ const NaviContainer = styled.div<{ isMobile: boolean; screenWidth: number }>`
   z-index: 100;
 `;
 const NaviBtn = styled.div<{ bgColor: string }>`
-  display: flex;
-  width: 50%;
+  width: 33%;
   height: 30px;
   background-color: ${(props) => props.bgColor};
   top: 0px;
@@ -75,18 +74,18 @@ const NaviBtn = styled.div<{ bgColor: string }>`
 `;
 
 const SearchInput = styled.input`
-  width: 100%;
+  width: 100px;
   height: 30px;
   font-size: 20px;
   outline: none;
   border-width: 0px;
 `;
 const SearchBtn = styled.button`
-  position: absolute;
+  position: fixed;
   top: 0;
-  right: 195px;
+  left: 100px;
   background-color: purple;
-  width: 10%;
+  width: 20%;
   align-items: center;
   text-align: center;
   justify-content: center;
@@ -100,7 +99,7 @@ const SearchBtn = styled.button`
 const ItemImg = styled.img`
   width: 100px;
   aspect-ratio: 1;
-  z-index: 2;
+  z-index: 0;
 `;
 const ItemText = styled.div`
   text-overflow: ellipsis;
@@ -120,6 +119,7 @@ const Main = () => {
   const [index, setIndex] = useState(0);
   const [selectItem, setSelectItem] = useState(0);
   const [data, setData] = useState({} as IDataProps);
+  const [scroll, setScroll] = useState({ x: 0, y: 0 });
 
   const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
   const handleSearch = () => {
@@ -171,10 +171,16 @@ const Main = () => {
     setPrayModal(true);
   };
 
+  const controll = (x: number, y: number) => {
+    console.log(window.scrollX, window.scrollY);
+    setScroll((prev) => ({ ...prev, x: window.scrollX, y: window.scrollY }));
+  };
+
   useEffect(() => {
     req();
 
     const listener = window.addEventListener("MainRefresh", req);
+    window.addEventListener("scroll", () => controll(0, 0));
     return () => {
       window.removeEventListener("MainRefresh", req);
     };
@@ -182,6 +188,10 @@ const Main = () => {
 
   const req = async () => {
     // 통신 되면
+
+    // setData(itemArr);
+    // setReady(true);
+    // return;
     // const data = await anyFunction();
     console.log("메인통신");
     const res = await getCards();
@@ -209,12 +219,12 @@ const Main = () => {
   return (
     <>
       <Background
-        width={5000}
-        height={5000}
+        width={3000}
+        height={3000}
         bgImage={
           nowWeek < 5
-            ? `${imagePath}/tree_${nowWeek}.png`
-            : `${imagePath}/tree_${1}.png`
+            ? `${imagePath}/tree_${nowWeek}.jpg`
+            : `${imagePath}/tree_${1}.jpg`
         }
       >
         <NaviContainer isMobile={isMobile} screenWidth={screenWidth}>
@@ -225,8 +235,6 @@ const Main = () => {
               style={{
                 display: "flex",
                 flexDirection: "row",
-                width: "100%",
-                backgroundColor: "black",
               }}
             >
               <SearchInput
@@ -245,9 +253,7 @@ const Main = () => {
             <div
               onClick={showPrayModal}
               style={{
-                position: "absolute",
-                right: 0,
-                backgroundColor: "red",
+                backgroundColor: "green",
                 // height: 30,
                 width: 100,
                 padding: 8,
@@ -258,7 +264,8 @@ const Main = () => {
             </div>
           </NaviBtn>
         </NaviContainer>
-        <ScrollLineIndicator />
+        <ScrollLineIndicator x={scroll.x} y={scroll.y} nowWeek={nowWeek} />
+
         <Modal.ItemModal
           show={itemModal}
           setModal={setItemModal}

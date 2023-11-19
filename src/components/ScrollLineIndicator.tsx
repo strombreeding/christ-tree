@@ -1,15 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, FC } from "react";
 
-const ScrollLineIndicator = () => {
-  const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
-  const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
-
-  const handleResize = () => {
-    setViewportHeight(window.innerHeight);
-    setViewportWidth(window.innerWidth);
-  };
+const ScrollLineIndicator: FC<{ x: number; y: number; nowWeek: number }> = ({
+  x,
+  y,
+  nowWeek,
+}) => {
+  const [bSize, setBSize] = useState({
+    width: window.innerWidth / 5,
+    height: window.innerHeight / 5,
+  });
 
   useEffect(() => {
+    const handleResize = () => {
+      setBSize({
+        width: window.innerWidth / 5,
+        height: window.innerHeight / 5,
+      });
+    };
+
     window.addEventListener("resize", handleResize);
 
     return () => {
@@ -18,39 +26,52 @@ const ScrollLineIndicator = () => {
   }, []);
 
   return (
-    <div style={{ position: "relative", height: "5000px", width: "5000px" }}>
-      {/* 축소판 배경 */}
-      <div
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          width: "100px", // 축소판 크기 고정
-          height: "100px", // 축소판 크기 고정
-          transform: "translate(-50%, -50%)",
-          background: 'url("path/to/your/image.jpg")',
-          backgroundSize: "cover",
-        }}
-      >
-        {/* 디바이스 현재 보이는 영역을 표시하는 둘레 */}
-        <div
-          style={{
-            position: "absolute",
-            left: "50%", // 중앙으로 이동
-            top: "50%", // 중앙으로 이동
-            transform: "translate(-50%, -50%)",
-            border: "2px solid yellow", // 노란색 둘레
-            borderRadius: "5px", // 둘레의 모퉁이를 둥글게
-            width: `${viewportWidth}px`, // 둘레의 너비
-            height: `${viewportHeight}px`, // 둘레의 높이
-            zIndex: 999, // 다른 요소 위에 표시하기 위한 z-index
-            pointerEvents: "none", // 선이 다른 이벤트를 가로채지 않도록 함
-            boxSizing: "border-box", // border 크기를 둘레의 크기로 고려
-          }}
-        />
-      </div>
+    <div
+      style={{
+        position: "sticky",
+        top: "10%",
+        left: "100%",
+        width: bSize.width, // 축소판 크기 고정
+        aspectRatio: 1,
+        transform: "translate(-100%, -50%)",
+        backgroundImage:
+          nowWeek < 5
+            ? `url("/assets/tree_${nowWeek}.jpg")`
+            : `url("/assets/tree_1.jpg")`,
+        backgroundSize: "cover",
+        zIndex: 2,
+      }}
+    >
+      <RedDot scrollX={x} scrollY={y} bSize={bSize} />
     </div>
   );
 };
 
 export default ScrollLineIndicator;
+const RedDot: FC<{
+  scrollX: number;
+  scrollY: number;
+  bSize: { width: number; height: number };
+}> = ({ scrollX, scrollY, bSize }) => {
+  const dotSize = 200; // 원래 빨간 점의 크기
+  const scaledDotSize = dotSize * (bSize.width / 3000); // B의 크기에 비례하여 조정된 크기
+  console.log(scaledDotSize);
+  //   const scaledDotSize = dotSize * (bSize.width / 3000); // B의 크기에 비례하여 조정된 크기
+
+  // 빨간 점의 위치 계산
+  const dotX = (scrollX / 3000) * bSize.width;
+  const dotY = (scrollY / 3000) * bSize.height;
+
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: `${dotX}px`,
+        top: `${dotY}px`,
+        width: `${scaledDotSize}px`,
+        height: `${scaledDotSize}px`,
+        backgroundColor: "red",
+      }}
+    ></div>
+  );
+};
