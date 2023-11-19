@@ -8,7 +8,7 @@ import {
   useState,
 } from "react";
 import styled from "styled-components";
-import { IItemProps, imagePath, itemArr } from "../config";
+import { IItemProps, height, imagePath, itemArr, width } from "../config";
 import { isMobile } from "react-device-detect";
 import * as Modal from "../components/Modal";
 import backImg from "../assets/backImg.jpg";
@@ -26,8 +26,8 @@ interface IDataProps {
   results: IItemProps[];
 }
 const Background = styled.div<IDivProps>`
-  max-width: 3000px;
-  max-height: 3000px;
+  max-width: ${width}px;
+  max-height: ${height}px;
   width: ${(props) => props.width}px;
   height: ${(props) => props.height}px;
   background-color: lightblue;
@@ -49,7 +49,6 @@ const Item = styled.div<{ x: string; y: string; selectItem: boolean }>`
   border-radius: 25px;
   cursor: pointer;
 `;
-console.log(window.innerWidth);
 const NaviContainer = styled.div<{ isMobile: boolean; screenWidth: number }>`
   position: sticky;
   display: flex;
@@ -147,13 +146,11 @@ const Main = () => {
     }
   };
   const showItemModal = (index: number) => () => {
-    console.log(index);
     const item = itemsRef.current[index];
     if (item && !itemModal) {
       const itemRect = item.getBoundingClientRect();
       // const scrollOffsetX = (itemRect.left + itemRect.right) / 3;
       // const scrollOffsetY = (itemRect.top + itemRect.bottom) / 3;
-      console.log(itemRect.left);
       setItemModal(true);
       setPrayModal(false);
       setIndex(index);
@@ -162,7 +159,6 @@ const Main = () => {
       setItemModal(false);
       setIndex(index);
     }
-    console.log(data.results);
     setSelectItem(data.results[index].id);
   };
 
@@ -172,7 +168,6 @@ const Main = () => {
   };
 
   const controll = (x: number, y: number) => {
-    console.log(window.scrollX, window.scrollY);
     setScroll((prev) => ({ ...prev, x: window.scrollX, y: window.scrollY }));
   };
 
@@ -219,8 +214,8 @@ const Main = () => {
   return (
     <>
       <Background
-        width={3000}
-        height={3000}
+        width={width}
+        height={height}
         bgImage={
           nowWeek < 5
             ? `${imagePath}/tree_${nowWeek}.jpg`

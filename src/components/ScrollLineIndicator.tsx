@@ -1,27 +1,28 @@
 import React, { useState, useEffect, FC } from "react";
 
-const ScrollLineIndicator: FC<{ x: number; y: number; nowWeek: number }> = ({
-  x,
-  y,
-  nowWeek,
-}) => {
-  const [bSize, setBSize] = useState({
-    width: window.innerWidth / 5,
-    height: window.innerHeight / 5,
-  });
+const BACKGROUND_SIZE = 3000; // B의 크기를 나타내는 상수
+const maxScrollX = BACKGROUND_SIZE - window.innerWidth;
+const maxScrollY = BACKGROUND_SIZE - window.innerHeight;
+interface ScrollLineIndicatorProps {
+  x: number;
+  y: number;
+  nowWeek: number;
+}
 
+const ScrollLineIndicator: FC<ScrollLineIndicatorProps> = ({ nowWeek }) => {
+  const [scrollX, setScrollX] = useState(0);
+  const [scrollY, setScrollY] = useState(0);
+  console.log(maxScrollX, maxScrollY);
   useEffect(() => {
-    const handleResize = () => {
-      setBSize({
-        width: window.innerWidth / 5,
-        height: window.innerHeight / 5,
-      });
+    const handleScroll = () => {
+      setScrollX(window.scrollX);
+      setScrollY(window.scrollY);
     };
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -29,47 +30,58 @@ const ScrollLineIndicator: FC<{ x: number; y: number; nowWeek: number }> = ({
     <div
       style={{
         position: "sticky",
-        top: "10%",
+        top: "11%",
         left: "100%",
-        width: bSize.width, // 축소판 크기 고정
-        aspectRatio: 1,
         transform: "translate(-100%, -50%)",
+        width: `${maxScrollX / 30}px`,
+        height: `${maxScrollY / 30}px`,
         backgroundImage:
           nowWeek < 5
             ? `url("/assets/tree_${nowWeek}.jpg")`
             : `url("/assets/tree_1.jpg")`,
-        backgroundSize: "cover",
-        zIndex: 2,
+        backgroundSize: "contain", // 배경 이미지가 컨테이너를 완전히 덮지 않도록
+        backgroundPosition: "center", // 이미지가 중앙에 위치하도록
+        backgroundRepeat: "no-repeat", // 이미지가 반복되지 않도록
       }}
     >
-      <RedDot scrollX={x} scrollY={y} bSize={bSize} />
+      <RedDot
+        scrollX={scrollX}
+        scrollY={scrollY}
+        bSize={{ width: maxScrollX / 30, height: maxScrollY / 30 }}
+      />
     </div>
   );
 };
 
 export default ScrollLineIndicator;
-const RedDot: FC<{
+
+interface RedDotProps {
   scrollX: number;
   scrollY: number;
   bSize: { width: number; height: number };
-}> = ({ scrollX, scrollY, bSize }) => {
-  const dotSize = 200; // 원래 빨간 점의 크기
-  const scaledDotSize = dotSize * (bSize.width / 3000); // B의 크기에 비례하여 조정된 크기
-  console.log(scaledDotSize);
-  //   const scaledDotSize = dotSize * (bSize.width / 3000); // B의 크기에 비례하여 조정된 크기
+}
 
-  // 빨간 점의 위치 계산
-  const dotX = (scrollX / 3000) * bSize.width;
-  const dotY = (scrollY / 3000) * bSize.height;
-
+const RedDot: FC<RedDotProps> = ({ scrollX, scrollY, bSize }) => {
+  const dotX = (scrollX / maxScrollX) * bSize.width;
+  const dotY = (scrollY / maxScrollY) * bSize.height;
+  const position = {
+    x: dotX < maxScrollX / 30 ? dotX : maxScrollX / 30,
+    y: dotY < maxScrollY / 30 ? dotY : maxScrollY / 30,
+  };
+  console.log(`
+  축소 x : ${maxScrollX / 20}
+  축소 y : ${maxScrollY / 20}
+  dotX : ${position.x} 
+  dotY : ${position.y} 
+  `);
   return (
     <div
       style={{
         position: "absolute",
-        left: `${dotX}px`,
-        top: `${dotY}px`,
-        width: `${scaledDotSize}px`,
-        height: `${scaledDotSize}px`,
+        left: `${position.x}px`,
+        top: `${position.y}px`,
+        width: "10px",
+        height: "10px",
         backgroundColor: "red",
       }}
     ></div>

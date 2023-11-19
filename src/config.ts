@@ -8,6 +8,8 @@ export interface IItemProps {
   ornament_y: string;
   week:number
 }
+export const width = 3000
+export const height = 3000
 console.log(process.env.REACT_APP_IMAGE_PATH); // 콘솔에서 확인
 export const imagePath = process.env.REACT_APP_IMAGE_PATH;
 export const itemImg = [
@@ -33,8 +35,8 @@ export const itemArr = {
             "content": "1",
             "img_path": "/assets/IMG_0332.png",
             "week": 0,
-            "ornament_x": "2957.1727113319066",
-            "ornament_y": "3969.786166405239"
+            "ornament_x": "1900.1727113319066",
+            "ornament_y": "1500.786166405239"
         },
         {
             "id": 210,
@@ -42,7 +44,7 @@ export const itemArr = {
             "content": "아멘이옵니다 아멘~",
             "img_path": "/assets/IMG_0332.png",
             "week": 0,
-            "ornament_x": "2823.293273778585",
+            "ornament_x": "1400.293273778585",
             "ornament_y": "923.2693021784783"
         },
         {
@@ -51,8 +53,8 @@ export const itemArr = {
             "content": "Yessfghtrccggh",
             "img_path": "/assets/IMG_0336.png",
             "week": 0,
-            "ornament_x": "2542.8120318419255",
-            "ornament_y": "2859.5595109009705"
+            "ornament_x": "1000.8120318419255",
+            "ornament_y": "500.5595109009705"
         }
     ]
 }
