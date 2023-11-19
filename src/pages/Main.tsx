@@ -14,6 +14,7 @@ import * as Modal from "../components/Modal";
 import backImg from "../assets/backImg.jpg";
 import ff from "../assets/tree_1.png";
 import { getCards } from "../apis/read";
+import ScrollLineIndicator from "../components/ScrollLineIndicator";
 interface IDivProps {
   width: number;
   height: number;
@@ -257,6 +258,7 @@ const Main = () => {
             </div>
           </NaviBtn>
         </NaviContainer>
+        <ScrollLineIndicator />
         <Modal.ItemModal
           show={itemModal}
           setModal={setItemModal}
