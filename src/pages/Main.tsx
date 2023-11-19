@@ -211,9 +211,9 @@ const Main = () => {
         width={5000}
         height={5000}
         bgImage={
-          nowWeek < 4
+          nowWeek < 5
             ? `${imagePath}/tree_${nowWeek}.png`
-            : `${imagePath}/tree_${0}.png`
+            : `${imagePath}/tree_${1}.png`
         }
       >
         <NaviContainer isMobile={isMobile} screenWidth={screenWidth}>
