@@ -204,12 +204,17 @@ const Main = () => {
     }
   };
   if (!ready) return <></>;
+  const nowWeek = getCurrentWeekOfMonth();
   return (
     <>
       <Background
         width={5000}
         height={5000}
-        bgImage={`${imagePath}/tree_${data.results[0].week}.png`}
+        bgImage={
+          nowWeek < 4
+            ? `${imagePath}/tree_${nowWeek}.png`
+            : `${imagePath}/tree_${0}.png`
+        }
       >
         <NaviContainer isMobile={isMobile} screenWidth={screenWidth}>
           <NaviBtn bgColor="blue">
@@ -306,3 +311,19 @@ const Main = () => {
 };
 
 export default Main;
+
+function getCurrentWeekOfMonth() {
+  const today = new Date(); // 현재 날짜
+  const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1); // 이번 달의 첫째 날
+  const dayOfWeek = firstDayOfMonth.getDay(); // 이번 달의 첫째 날의 요일 (0=일요일, 1=월요일, ...)
+
+  // 이번 달의 첫째 날부터 현재까지의 총 날짜 수
+  const daysSinceStartOfMonth = today.getDate();
+
+  // 이번 달의 첫째 날이 일요일이 아니면, 첫째 주의 날짜 수를 조정
+  const adjustedDayCount =
+    (dayOfWeek === 0 ? 0 : 7 - dayOfWeek) + daysSinceStartOfMonth;
+
+  // 이번 달의 주차 계산 (1을 더해 현재 주차를 포함)
+  return Math.ceil(adjustedDayCount / 7);
+}
