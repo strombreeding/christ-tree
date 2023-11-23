@@ -215,7 +215,7 @@ const Main = () => {
         width={width}
         height={height}
         bgImage={
-          nowWeek < 5
+          data[0].week < 4
             ? `${imagePath}/tree_${data[0].week + 1}.jpg`
             : `${imagePath}/tree_${1}.jpg`
         }
@@ -257,7 +257,11 @@ const Main = () => {
             </div>
           </NaviBtn>
         </NaviContainer>
-        <ScrollLineIndicator x={scroll.x} y={scroll.y} nowWeek={nowWeek} />
+        <ScrollLineIndicator
+          x={scroll.x}
+          y={scroll.y}
+          nowWeek={data[0].week + 1}
+        />
 
         <Modal.ItemModal
           show={itemModal}
