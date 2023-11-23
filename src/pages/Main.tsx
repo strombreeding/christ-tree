@@ -216,7 +216,7 @@ const Main = () => {
         height={height}
         bgImage={
           nowWeek < 5
-            ? `${imagePath}/tree_${nowWeek}.jpg`
+            ? `${imagePath}/tree_${data[0].week + 1}.jpg`
             : `${imagePath}/tree_${1}.jpg`
         }
       >
