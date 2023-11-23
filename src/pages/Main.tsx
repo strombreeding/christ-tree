@@ -21,10 +21,8 @@ interface IDivProps {
   bgImage?: string;
 }
 
-interface IDataProps {
-  count: number;
-  results: IItemProps[];
-}
+type IDataProps = IItemProps[];
+
 const Background = styled.div<IDivProps>`
   max-width: ${width}px;
   max-height: ${height}px;
@@ -117,14 +115,12 @@ const Main = () => {
   const [prayModal, setPrayModal] = useState(false);
   const [index, setIndex] = useState(0);
   const [selectItem, setSelectItem] = useState(0);
-  const [data, setData] = useState({} as IDataProps);
+  const [data, setData] = useState([] as IDataProps);
   const [scroll, setScroll] = useState({ x: 0, y: 0 });
 
   const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
   const handleSearch = () => {
-    const matchingItems = data.results.filter((item) =>
-      item.writer.includes(text)
-    );
+    const matchingItems = data.filter((item) => item.writer.includes(text));
 
     if (matchingItems.length > 0) {
       const item = matchingItems[currentIndex % matchingItems.length];
@@ -159,7 +155,7 @@ const Main = () => {
       setItemModal(false);
       setIndex(index);
     }
-    setSelectItem(data.results[index].id);
+    setSelectItem(data[index].id);
   };
 
   const showPrayModal = () => {
@@ -190,9 +186,11 @@ const Main = () => {
     // const data = await anyFunction();
     console.log("메인통신");
     const res = await getCards();
-    itemsRef.current = itemsRef.current.slice(0, res.results.length);
-    // const data = itemArr;
+    console.log(res);
     setData(res);
+    itemsRef.current = itemsRef.current.slice(0, res.length);
+    // const data = itemArr;
+    // setData(data);
     setReady(true);
   };
   const handleSubmit = (event: any) => {
@@ -217,8 +215,8 @@ const Main = () => {
         width={width}
         height={height}
         bgImage={
-          nowWeek < 5
-            ? `${imagePath}/tree_${nowWeek}.jpg`
+          data[0].week < 4
+            ? `${imagePath}/tree_${data[0].week + 1}.jpg`
             : `${imagePath}/tree_${1}.jpg`
         }
       >
@@ -259,22 +257,26 @@ const Main = () => {
             </div>
           </NaviBtn>
         </NaviContainer>
-        <ScrollLineIndicator x={scroll.x} y={scroll.y} nowWeek={nowWeek} />
+        <ScrollLineIndicator
+          x={scroll.x}
+          y={scroll.y}
+          nowWeek={data[0].week + 1}
+        />
 
         <Modal.ItemModal
           show={itemModal}
           setModal={setItemModal}
-          data={data.results}
+          data={data}
           index={index}
         />
         <Modal.PrayModal
           show={prayModal}
           setPrayModal={setPrayModal}
-          dataList={data.results}
+          dataList={data}
           setSelectItem={setSelectItem}
         />
 
-        {data.results.map((item, index) => {
+        {data.map((item, index) => {
           return (
             <Item
               onClick={showItemModal(index)}
