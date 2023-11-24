@@ -115,7 +115,7 @@ const Main = () => {
   const [prayModal, setPrayModal] = useState(false);
   const [index, setIndex] = useState(0);
   const [selectItem, setSelectItem] = useState(0);
-  const [notice, setNotice] = useState({ title: "", notice: "" });
+  const [notice, setNotice] = useState({ title: "", notice: "", week: 0 });
   const [showNotice, setShowNotice] = useState(
     Number(window.localStorage.getItem("ds")) !== nowWeek
   );
@@ -191,7 +191,11 @@ const Main = () => {
     console.log("메인통신");
     const res = await getCards();
     const notice = await getNotice();
-    setNotice({ title: notice.title, notice: notice.notice });
+    setNotice({
+      title: notice.title,
+      notice: notice.notice,
+      week: notice.week,
+    });
     console.log(res);
     setData(res);
     itemsRef.current = itemsRef.current.slice(0, res.length);
@@ -274,11 +278,12 @@ const Main = () => {
           data={data}
           index={index}
         />
-        <Modal.PrayModal
-          show={prayModal}
-          setPrayModal={setPrayModal}
-          dataList={data}
-          setSelectItem={setSelectItem}
+        <Modal.Notice
+          show={showNotice}
+          setModal={setShowNotice}
+          title={notice.title}
+          notice={notice.notice}
+          week={notice.week}
         />
         <Modal.PrayModal
           show={prayModal}
