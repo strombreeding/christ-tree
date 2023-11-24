@@ -13,7 +13,7 @@ import { isMobile } from "react-device-detect";
 import * as Modal from "../components/Modal";
 import backImg from "../assets/backImg.jpg";
 import ff from "../assets/tree_1.png";
-import { getCards } from "../apis/read";
+import { getCards, getNotice } from "../apis/read";
 import ScrollLineIndicator from "../components/ScrollLineIndicator";
 interface IDivProps {
   width: number;
@@ -104,8 +104,8 @@ const ItemText = styled.div`
   max-width: 100px;
   white-space: nowrap;
 `;
-
 const Main = () => {
+  const nowWeek = getCurrentWeekOfMonth();
   // const [scrollPosition, setScrollPosition] = useState(0);
   const [text, setText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -115,6 +115,10 @@ const Main = () => {
   const [prayModal, setPrayModal] = useState(false);
   const [index, setIndex] = useState(0);
   const [selectItem, setSelectItem] = useState(0);
+  const [notice, setNotice] = useState({ title: "", notice: "" });
+  const [showNotice, setShowNotice] = useState(
+    Number(window.localStorage.getItem("ds")) !== nowWeek
+  );
   const [data, setData] = useState([] as IDataProps);
   const [scroll, setScroll] = useState({ x: 0, y: 0 });
 
@@ -186,6 +190,8 @@ const Main = () => {
     // const data = await anyFunction();
     console.log("메인통신");
     const res = await getCards();
+    const notice = await getNotice();
+    setNotice({ title: notice.title, notice: notice.notice });
     console.log(res);
     setData(res);
     itemsRef.current = itemsRef.current.slice(0, res.length);
@@ -208,7 +214,6 @@ const Main = () => {
     }
   };
   if (!ready) return <></>;
-  const nowWeek = getCurrentWeekOfMonth();
   return (
     <>
       <Background
@@ -275,6 +280,12 @@ const Main = () => {
           dataList={data}
           setSelectItem={setSelectItem}
         />
+        <Modal.PrayModal
+          show={prayModal}
+          setPrayModal={setPrayModal}
+          dataList={data}
+          setSelectItem={setSelectItem}
+        />
 
         {data.map((item, index) => {
           return (
@@ -318,7 +329,7 @@ const Main = () => {
 
 export default Main;
 
-function getCurrentWeekOfMonth() {
+export function getCurrentWeekOfMonth() {
   const today = new Date(); // 현재 날짜
   const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1); // 이번 달의 첫째 날
   const dayOfWeek = firstDayOfMonth.getDay(); // 이번 달의 첫째 날의 요일 (0=일요일, 1=월요일, ...)

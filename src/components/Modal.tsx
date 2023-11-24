@@ -4,6 +4,7 @@ import { styled } from "styled-components";
 import { IItemProps, itemImg } from "../config";
 import { getCards } from "../apis/read";
 import { insertCard } from "../apis/create";
+import { getCurrentWeekOfMonth } from "../pages/Main";
 
 interface IModalDivProps {
   isMobile?: boolean;
@@ -64,21 +65,59 @@ export const ItemModal: FC<{
       <ModalBg onClick={() => setModal(false)} />
       <ModalDiv isMobile={isMobile}>
         <ModalContent>
-          <img
-            style={{ width: 100, aspectRatio: 1 }}
-            src={data[index].img_path}
-          />
-          <div>{data[index].writer}</div>
-          <div style={{ padding: 30 }}>기도제목 상세</div>
+          <div style={{ padding: 30 }}>기도제목</div>
           <ModalTextArea
             disabled
             readOnly
-            placeholder="기도할거리"
+            placeholder="기도제목"
             defaultValue={data[index].content}
             rows={1}
             isMobile={isMobile}
             maxLength={250}
           />
+          <div>{data[index].writer}</div>
+        </ModalContent>
+      </ModalDiv>
+    </>
+  );
+};
+export const Notice: FC<{
+  show: boolean;
+  setModal: Dispatch<SetStateAction<boolean>>;
+  title: string;
+  notice: string;
+  week: number;
+}> = ({ show, setModal, notice, title, week }) => {
+  if (!show) return <div></div>;
+
+  return (
+    <>
+      <ModalBg onClick={() => setModal(false)} />
+      <ModalDiv isMobile={isMobile}>
+        <ModalContent>
+          <div style={{ padding: 30 }}>공지</div>
+          <ModalTextArea
+            disabled
+            readOnly
+            placeholder="기도제목"
+            defaultValue={notice}
+            rows={1}
+            isMobile={isMobile}
+            maxLength={250}
+          />
+          <div>{title}</div>
+
+          <div
+            onClick={() => {
+              setModal(false);
+              window.localStorage.setItem(
+                "ds",
+                getCurrentWeekOfMonth().toString()
+              );
+            }}
+          >
+            공지 업데이트까지 안보기
+          </div>
         </ModalContent>
       </ModalDiv>
     </>
@@ -151,10 +190,10 @@ export const PrayModal: FC<{
 }> = ({ show, setPrayModal, dataList, setSelectItem }) => {
   const [text, setText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [writer, setWriter] = useState("");
+  const [writer, setWriter] = useState("익명");
   const [content, setContent] = useState("");
   const [img, setImg] = useState<string>("");
-  const [type, setType] = useState<"choice" | "final">("final");
+  const [type, setType] = useState<"choice" | "final">("choice");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const handleInputChange = (e: any) => {
     setContent(e.target.value);
@@ -175,12 +214,17 @@ export const PrayModal: FC<{
 
   const confirm = async () => {
     // 통신
-    if (writer.trim().length < 2) return alert("닉넴을 2자 이상 입력하세요");
+    let copyWriter = writer;
+    if (writer.trim().length < 2) copyWriter = "익명";
     if (content.trim().length < 10)
       return alert("기도제목이 10자도 안된다고요? 말도안돼~");
     if (img.trim().length < 10) return alert("이미지 골라주셈");
     try {
-      const res = await insertCard({ writer, content, img_path: img });
+      const res = await insertCard({
+        writer: copyWriter,
+        content,
+        img_path: img,
+      });
       handleSearch(res!);
       setTimeout(() => {
         window.dispatchEvent(new Event("MainRefresh"));
