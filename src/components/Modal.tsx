@@ -105,9 +105,18 @@ export const Notice: FC<{
             isMobile={isMobile}
             maxLength={250}
           />
-          <div>{title}</div>
+          <div style={{ marginTop: 5, fontWeight: "bold", fontSize: 14 }}>
+            {title}
+          </div>
 
           <div
+            style={{
+              marginTop: 5,
+              marginBottom: 5,
+              color: "blue",
+              fontSize: 16,
+              fontWeight: "bolder",
+            }}
             onClick={() => {
               setModal(false);
               window.localStorage.setItem(
