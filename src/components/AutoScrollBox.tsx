@@ -48,7 +48,6 @@ function AutoScrollBox() {
         overflow: "hidden",
         width: "300px",
         height: "300px",
-        border: "1px solid #ccc",
         background: "black",
         color: "white",
         whiteSpace: "pre-line",
@@ -69,7 +68,7 @@ function AutoScrollBox() {
           <p
             key={index}
             style={{
-              lineHeight: 26,
+              lineHeight: line.includes("&") ? 4.5 : 1.5,
               fontWeight:
                 line.includes("주관") ||
                 line.includes("제작참여") ||
