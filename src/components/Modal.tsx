@@ -14,7 +14,7 @@ const ModalDiv = styled.div<IModalDivProps>`
   display: flex;
   width: ${(props) => (props.isMobile ? 360 : 600)}px;
   height: ${(props) => (props.isMobile ? 600 : 600)}px;
-  background-color: purple;
+  background-color: #b931fc;
   top: ${(props) => (props.isMobile ? 60 : 100)}px;
   left: 50%;
   transform: translateX(-50%);
@@ -37,7 +37,7 @@ const ModalBg = styled.div`
   z-index: 4;
 `;
 const ModalContent = styled.div`
-  background-color: white;
+  background-color: #ffe5e5;
   width: 80%;
   height: 80%;
   align-items: center;
@@ -51,17 +51,16 @@ const ModalTextArea = styled.textarea<{ isMobile: boolean }>`
   resize: none;
   width: ${(props) => (props.isMobile ? "70%" : "300px")};
   height: 200px;
-  background-color: #925092;
+  background-color: #ffe5e5;
+  padding: 15px;
 `;
 
-const ModalWriter = styled.div`
+const ModalWriter = styled.div<{ isMobile: boolean }>`
   font-weight: bolder;
   text-align: right;
   margin-top: 5px;
   font-size: 20px;
-  ::before {
-    content: "- ";
-  }
+  width: ${(props) => (props.isMobile ? "70%" : "300px")};
 `;
 
 export const ItemModal: FC<{
@@ -87,7 +86,7 @@ export const ItemModal: FC<{
             isMobile={isMobile}
             maxLength={250}
           />
-          <ModalWriter>{data[index].writer}</ModalWriter>
+          <ModalWriter isMobile={isMobile}>- {data[index].writer}</ModalWriter>
         </ModalContent>
       </ModalDiv>
     </>
