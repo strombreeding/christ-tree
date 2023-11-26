@@ -236,6 +236,7 @@ const Main = () => {
               onSubmit={handleSubmit}
               onKeyDown={handleKeyPress}
               style={{
+                width: 195,
                 display: "flex",
                 flexDirection: "row",
               }}

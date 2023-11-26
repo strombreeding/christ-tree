@@ -37,7 +37,7 @@ const ModalBg = styled.div`
   z-index: 4;
 `;
 const ModalContent = styled.div`
-  background-color: #925092;
+  background-color: white;
   width: 80%;
   height: 80%;
   align-items: center;
@@ -51,7 +51,19 @@ const ModalTextArea = styled.textarea<{ isMobile: boolean }>`
   resize: none;
   width: ${(props) => (props.isMobile ? "70%" : "300px")};
   height: 200px;
+  background-color: #925092;
 `;
+
+const ModalWriter = styled.div`
+  font-weight: bolder;
+  text-align: right;
+  margin-top: 5px;
+  font-size: 20px;
+  ::before {
+    content: "- ";
+  }
+`;
+
 export const ItemModal: FC<{
   show: boolean;
   setModal: Dispatch<SetStateAction<boolean>>;
@@ -65,7 +77,7 @@ export const ItemModal: FC<{
       <ModalBg onClick={() => setModal(false)} />
       <ModalDiv isMobile={isMobile}>
         <ModalContent>
-          <div style={{ padding: 30 }}>기도제목</div>
+          <div style={{ padding: 30, fontWeight: "bolder" }}>기도제목</div>
           <ModalTextArea
             disabled
             readOnly
@@ -75,7 +87,7 @@ export const ItemModal: FC<{
             isMobile={isMobile}
             maxLength={250}
           />
-          <div>{data[index].writer}</div>
+          <ModalWriter>{data[index].writer}</ModalWriter>
         </ModalContent>
       </ModalDiv>
     </>
