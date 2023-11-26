@@ -4,7 +4,7 @@ import { styled } from "styled-components";
 import { IItemProps, itemImg } from "../config";
 import { getCards } from "../apis/read";
 import { insertCard } from "../apis/create";
-import { getCurrentWeekOfMonth } from "../pages/Main";
+import { getCurrentWeekOfMonth, getMidnightMilliseconds } from "../pages/Main";
 
 interface IModalDivProps {
   isMobile?: boolean;
@@ -95,8 +95,15 @@ export const Notice: FC<{
       <ModalBg onClick={() => setModal(false)} />
       <ModalDiv isMobile={isMobile}>
         <ModalContent>
-          <div style={{ padding: 30 }}>* 공지 *</div>
-          <div style={{ marginTop: 5, fontWeight: "bold", fontSize: 14 }}>
+          <div style={{ padding: 20, fontSize: 25 }}>* 공지 *</div>
+          <div
+            style={{
+              marginTop: 5,
+              marginBottom: 10,
+              fontWeight: "bold",
+              fontSize: 14,
+            }}
+          >
             {title}
           </div>
           <ModalTextArea
@@ -121,11 +128,11 @@ export const Notice: FC<{
               setModal(false);
               window.localStorage.setItem(
                 "ds",
-                getCurrentWeekOfMonth().toString()
+                getMidnightMilliseconds().toString()
               );
             }}
           >
-            공지 업데이트까지 안보기
+            오늘 하루동안 안보기
           </div>
         </ModalContent>
       </ModalDiv>

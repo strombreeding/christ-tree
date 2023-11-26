@@ -106,6 +106,7 @@ const ItemText = styled.div`
 `;
 const Main = () => {
   const nowWeek = getCurrentWeekOfMonth();
+  const todayNight = getMidnightMilliseconds();
   // const [scrollPosition, setScrollPosition] = useState(0);
   const [text, setText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -117,7 +118,7 @@ const Main = () => {
   const [selectItem, setSelectItem] = useState(0);
   const [notice, setNotice] = useState({ title: "", notice: "", week: 0 });
   const [showNotice, setShowNotice] = useState(
-    Number(window.localStorage.getItem("ds")) !== nowWeek
+    Number(window.localStorage.getItem("ds")) < todayNight
   );
   const [data, setData] = useState([] as IDataProps);
   const [scroll, setScroll] = useState({ x: 0, y: 0 });
@@ -224,7 +225,7 @@ const Main = () => {
         width={width}
         height={height}
         bgImage={
-          notice.week < 5
+          notice.week < 5 && notice.week > 0
             ? `${imagePath}/tree_${notice.week}.jpg`
             : `${imagePath}/tree_${1}.jpg`
         }
@@ -350,4 +351,20 @@ export function getCurrentWeekOfMonth() {
 
   // 이번 달의 주차 계산 (1을 더해 현재 주차를 포함)
   return Math.ceil(adjustedDayCount / 7);
+}
+
+export function getMidnightMilliseconds() {
+  // 현재 날짜와 시간 객체 생성
+  let currentDate = new Date();
+
+  // 오늘의 날짜로 설정
+  let year = currentDate.getFullYear();
+  let month = currentDate.getMonth();
+  let day = currentDate.getDate();
+
+  // 오늘의 23:59:59로 설정
+  let endOfDay = new Date(year, month, day, 23, 59, 59);
+
+  // 해당 날짜를 밀리초로 변환하여 반환
+  return endOfDay.getTime(); // 반환되는 값은 현재 시간대에서의 밀리초입니다.
 }
