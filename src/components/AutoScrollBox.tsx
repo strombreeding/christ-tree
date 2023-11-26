@@ -6,7 +6,7 @@ function AutoScrollBox() {
   const [scrollPosition, setScrollPosition] = useState(0);
   useEffect(() => {
     const scrollInterval = setInterval(() => {
-      setScrollPosition((prev) => (prev > 448 ? 0 : prev + 1));
+      setScrollPosition((prev) => (prev < -350 ? 300 : prev - 1));
       // 스크롤이 맨 위로 도달했을 때 다시 원래 방향으로 변경
     }, 50);
 
@@ -53,7 +53,7 @@ function AutoScrollBox() {
     >
       <div
         style={{
-          transform: `translateY(-${scrollPosition}px)`,
+          transform: `translateY(${scrollPosition}px)`,
           transition: "transform 0.1s ease-in-out",
           padding: "20px",
         }}
