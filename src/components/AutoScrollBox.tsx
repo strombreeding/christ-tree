@@ -6,10 +6,11 @@ function AutoScrollBox() {
   const [scrollPosition, setScrollPosition] = useState(0);
   useEffect(() => {
     const scrollInterval = setInterval(() => {
-      if (scrollPosition >= 424) {
+      if (scrollPosition > 424) {
         setScrollPosition(0);
+      } else {
+        setScrollPosition(scrollPosition + 1);
       }
-      setScrollPosition((prevPosition) => prevPosition + 1);
       // 스크롤이 맨 위로 도달했을 때 다시 원래 방향으로 변경
     }, 50);
 
