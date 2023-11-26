@@ -8,9 +8,8 @@ function AutoScrollBox() {
     const scrollInterval = setInterval(() => {
       if (scrollPosition > 424) {
         setScrollPosition(0);
-      } else {
-        setScrollPosition(scrollPosition + 1);
       }
+      setScrollPosition(scrollPosition + 1);
       // 스크롤이 맨 위로 도달했을 때 다시 원래 방향으로 변경
     }, 50);
 
@@ -34,6 +33,7 @@ function AutoScrollBox() {
         이승미
         유수정
         주예경
+        장동민
     `;
 
   return (
