@@ -206,7 +206,7 @@ export const PrayModal: FC<{
 }> = ({ show, setPrayModal, dataList, setSelectItem }) => {
   const [text, setText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [writer, setWriter] = useState("익명");
+  const [writer, setWriter] = useState("");
   const [content, setContent] = useState("");
   const [img, setImg] = useState<string>("");
   const [type, setType] = useState<"choice" | "final">("choice");

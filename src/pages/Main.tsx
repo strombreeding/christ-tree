@@ -52,7 +52,7 @@ const NaviContainer = styled.div<{ isMobile: boolean; screenWidth: number }>`
   display: flex;
   width: ${(props) => (props.isMobile ? props.screenWidth : 800)}px;
   height: 30px;
-  top: 5px;
+  top: 15px;
   /* left: 100%; */
   left: 50%;
   transform: translateX(-50%);

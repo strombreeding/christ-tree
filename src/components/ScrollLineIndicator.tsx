@@ -30,7 +30,7 @@ const ScrollLineIndicator: FC<ScrollLineIndicatorProps> = ({ nowWeek }) => {
     <div
       style={{
         position: "sticky",
-        top: "11%",
+        top: "13%",
         left: "100%",
         transform: "translate(-100%, -50%)",
         width: `${maxScrollX / 30}px`,
