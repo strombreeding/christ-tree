@@ -14,7 +14,7 @@ const ModalDiv = styled.div<IModalDivProps>`
   display: flex;
   width: ${(props) => (props.isMobile ? 360 : 600)}px;
   height: ${(props) => (props.isMobile ? 600 : 600)}px;
-  background-color: #b931fc;
+  background-color: purple;
   top: ${(props) => (props.isMobile ? 60 : 100)}px;
   left: 50%;
   transform: translateX(-50%);
@@ -76,7 +76,11 @@ export const ItemModal: FC<{
       <ModalBg onClick={() => setModal(false)} />
       <ModalDiv isMobile={isMobile}>
         <ModalContent>
-          <div style={{ padding: 30, fontWeight: "bolder" }}>기도제목</div>
+          <div
+            style={{ paddingBottom: 30, fontWeight: "bolder", fontSize: 24 }}
+          >
+            기도제목
+          </div>
           <ModalTextArea
             disabled
             readOnly
@@ -194,6 +198,8 @@ const ModalBtn = styled.button<{ bgColor: string; textColor: string }>`
   background-color: ${(props) => props.bgColor};
   color: ${(props) => props.textColor};
   border-radius: 4px;
+  font-weight: 900;
+  border-width: 0px;
 `;
 const SearchInput = styled.input`
   width: 50%;
@@ -233,7 +239,7 @@ export const PrayModal: FC<{
 
   const modalOff = () => {
     setPrayModal(false);
-    setType("final");
+    setType("choice");
     setContent("");
     setImg("");
     setWriter("");

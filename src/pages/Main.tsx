@@ -61,8 +61,12 @@ const NaviContainer = styled.div<{ isMobile: boolean; screenWidth: number }>`
   cursor: pointer;
   z-index: 100;
 `;
-const NaviBtn = styled.div<{ bgColor: string }>`
-  width: 33%;
+const NaviBtn = styled.div<{ bgColor: string; width?: number | null }>`
+  width: ${(props) =>
+    props.width != null && props.width > 0
+      ? props.width?.toString() + "px"
+      : "33%"};
+  /* width: 33%; */
   height: 30px;
   background-color: ${(props) => props.bgColor};
   top: 0px;
@@ -231,7 +235,7 @@ const Main = () => {
         }
       >
         <NaviContainer isMobile={isMobile} screenWidth={screenWidth}>
-          <NaviBtn bgColor="purple">
+          <NaviBtn width={195} bgColor="purple">
             <form
               onSubmit={handleSubmit}
               onKeyDown={handleKeyPress}
