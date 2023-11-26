@@ -4,21 +4,18 @@ import React, { useState, useEffect } from "react";
 
 function AutoScrollBox() {
   const [scrollPosition, setScrollPosition] = useState(0);
-  const [scrollDirection, setScrollDirection] = useState(1);
   useEffect(() => {
     const scrollInterval = setInterval(() => {
-      if (scrollPosition >= 300) {
-        setScrollDirection(-1);
+      if (scrollPosition >= 424) {
+        setScrollPosition(0);
       } else if (scrollPosition <= 0) {
+        setScrollPosition((prevPosition) => prevPosition + 1);
         // 스크롤이 맨 위로 도달했을 때 다시 원래 방향으로 변경
-        setScrollDirection(1);
       }
-
-      setScrollPosition((prevPosition) => prevPosition + 1);
     }, 50);
 
     return () => clearInterval(scrollInterval);
-  }, [scrollPosition, scrollDirection]);
+  }, [scrollPosition]);
 
   const creditsContent = `
         주관 
