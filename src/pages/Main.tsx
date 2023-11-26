@@ -82,9 +82,6 @@ const SearchInput = styled.input`
   border-width: 0px;
 `;
 const SearchBtn = styled.button`
-  position: fixed;
-  top: 0;
-  left: 100px;
   background-color: purple;
   width: 75px;
   align-items: center;
@@ -243,6 +240,7 @@ const Main = () => {
                 width: 195,
                 display: "flex",
                 flexDirection: "row",
+                justifyContent: "space-between",
               }}
             >
               <SearchInput

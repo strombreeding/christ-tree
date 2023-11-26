@@ -58,7 +58,7 @@ const ModalTextArea = styled.textarea<{ isMobile: boolean }>`
 const ModalWriter = styled.div<{ isMobile: boolean }>`
   font-weight: bolder;
   text-align: right;
-  margin-top: 5px;
+  margin-top: 10px;
   font-size: 20px;
   width: ${(props) => (props.isMobile ? "70%" : "300px")};
 `;
@@ -367,10 +367,10 @@ export const PrayModal: FC<{
             />
             <div style={{ marginTop: 5 }}>{content.length}/250</div>
             <BtnContainer>
-              <ModalBtn textColor="silver" bgColor="red" onClick={modalOff}>
+              <ModalBtn textColor="#F0F0F0" bgColor="red" onClick={modalOff}>
                 취소
               </ModalBtn>
-              <ModalBtn textColor="silver" bgColor="blue" onClick={confirm}>
+              <ModalBtn textColor="#F0F0F0" bgColor="blue" onClick={confirm}>
                 제출
               </ModalBtn>
             </BtnContainer>
