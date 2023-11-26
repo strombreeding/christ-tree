@@ -71,7 +71,7 @@ const NaviBtn = styled.div<{ bgColor: string }>`
 `;
 
 const SearchInput = styled.input`
-  width: 100px;
+  width: 120px;
   height: 30px;
   font-size: 20px;
   outline: none;
@@ -82,7 +82,7 @@ const SearchBtn = styled.button`
   top: 0;
   left: 100px;
   background-color: purple;
-  width: 20%;
+  width: 75px;
   align-items: center;
   text-align: center;
   justify-content: center;
@@ -231,7 +231,7 @@ const Main = () => {
         }
       >
         <NaviContainer isMobile={isMobile} screenWidth={screenWidth}>
-          <NaviBtn bgColor="blue">
+          <NaviBtn bgColor="purple">
             <form
               onSubmit={handleSubmit}
               onKeyDown={handleKeyPress}
