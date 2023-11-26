@@ -52,7 +52,7 @@ const NaviContainer = styled.div<{ isMobile: boolean; screenWidth: number }>`
   display: flex;
   width: ${(props) => (props.isMobile ? props.screenWidth : 800)}px;
   height: 30px;
-  top: 0px;
+  top: 5px;
   /* left: 100%; */
   left: 50%;
   transform: translateX(-50%);
@@ -256,14 +256,15 @@ const Main = () => {
             <div
               onClick={showPrayModal}
               style={{
-                backgroundColor: "green",
+                backgroundColor: "white",
                 // height: 30,
                 width: 100,
                 padding: 8,
                 borderRadius: 4,
+                fontWeight: "bolder",
               }}
             >
-              장식 추가
+              기도 작성
             </div>
           </NaviBtn>
         </NaviContainer>

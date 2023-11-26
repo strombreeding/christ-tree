@@ -36,7 +36,7 @@ const ScrollLineIndicator: FC<ScrollLineIndicatorProps> = ({ nowWeek }) => {
         width: `${maxScrollX / 30}px`,
         height: `${maxScrollY / 30}px`,
         backgroundImage:
-          nowWeek < 5
+          nowWeek < 5 && nowWeek > 0
             ? `url("/assets/tree_${nowWeek}.jpg")`
             : `url("/assets/tree_1.jpg")`,
         backgroundSize: "contain", // 배경 이미지가 컨테이너를 완전히 덮지 않도록
