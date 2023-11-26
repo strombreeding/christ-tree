@@ -15,6 +15,7 @@ import backImg from "../assets/backImg.jpg";
 import ff from "../assets/tree_1.png";
 import { getCards, getNotice } from "../apis/read";
 import ScrollLineIndicator from "../components/ScrollLineIndicator";
+import AutoScrollBox from "../components/AutoScrollBox";
 interface IDivProps {
   width: number;
   height: number;
@@ -77,7 +78,7 @@ const NaviBtn = styled.div<{ bgColor: string; width?: number | null }>`
 const SearchInput = styled.input`
   width: 120px;
   height: 30px;
-  font-size: 20px;
+  font-size: 14 px;
   outline: none;
   border-width: 0px;
 `;
@@ -93,7 +94,6 @@ const SearchBtn = styled.button`
   z-index: 1;
   color: white;
 `;
-
 const ItemImg = styled.img`
   width: 100px;
   aspect-ratio: 1;
@@ -231,6 +231,7 @@ const Main = () => {
             : `${imagePath}/tree_${1}.jpg`
         }
       >
+        <AutoScrollBox />
         <NaviContainer isMobile={isMobile} screenWidth={screenWidth}>
           <NaviBtn width={195} bgColor="purple">
             <form
