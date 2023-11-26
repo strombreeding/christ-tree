@@ -224,8 +224,8 @@ const Main = () => {
         width={width}
         height={height}
         bgImage={
-          data[0].week < 4
-            ? `${imagePath}/tree_${data[0].week + 1}.jpg`
+          notice.week < 5
+            ? `${imagePath}/tree_${notice.week}.jpg`
             : `${imagePath}/tree_${1}.jpg`
         }
       >
@@ -270,7 +270,7 @@ const Main = () => {
           <ScrollLineIndicator
             x={scroll.x}
             y={scroll.y}
-            nowWeek={data[0].week + 1}
+            nowWeek={notice.week}
           />
         )}
 
