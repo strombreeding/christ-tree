@@ -12,6 +12,18 @@ export const width = 3000
 export const height = 3000
 console.log(process.env.REACT_APP_IMAGE_PATH); // 콘솔에서 확인
 export const imagePath = process.env.REACT_APP_IMAGE_PATH;
+
+// 배열안에 배열로 
+/* 
+[
+    [...1주차 사진 리스트],
+    [...2주차 사진 리스트],
+    [...3주차 사진 리스트].
+    [...4주차 사진 리스트]
+]
+이런식으로 만들고 메인에서 통신으로 week 받아온 것을 사용해 itemImg[week].map 을 돌리자.
+
+*/
 export const itemImg = [
   `${imagePath}/IMG_${'0332'}.png`,
   `${imagePath}/IMG_${'0333'}.png`,

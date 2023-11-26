@@ -95,7 +95,10 @@ export const Notice: FC<{
       <ModalBg onClick={() => setModal(false)} />
       <ModalDiv isMobile={isMobile}>
         <ModalContent>
-          <div style={{ padding: 30 }}>공지</div>
+          <div style={{ padding: 30 }}>* 공지 *</div>
+          <div style={{ marginTop: 5, fontWeight: "bold", fontSize: 14 }}>
+            {title}
+          </div>
           <ModalTextArea
             disabled
             readOnly
@@ -105,9 +108,6 @@ export const Notice: FC<{
             isMobile={isMobile}
             maxLength={250}
           />
-          <div style={{ marginTop: 5, fontWeight: "bold", fontSize: 14 }}>
-            {title}
-          </div>
 
           <div
             style={{

@@ -266,11 +266,13 @@ const Main = () => {
             </div>
           </NaviBtn>
         </NaviContainer>
-        <ScrollLineIndicator
-          x={scroll.x}
-          y={scroll.y}
-          nowWeek={data[0].week + 1}
-        />
+        {data.length > 0 && (
+          <ScrollLineIndicator
+            x={scroll.x}
+            y={scroll.y}
+            nowWeek={data[0].week + 1}
+          />
+        )}
 
         <Modal.ItemModal
           show={itemModal}
