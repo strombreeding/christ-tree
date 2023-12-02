@@ -310,6 +310,7 @@ const Main = () => {
           setPrayModal={setPrayModal}
           dataList={data}
           setSelectItem={setSelectItem}
+          week={notice.week}
         />
 
         {data.map((item, index) => {

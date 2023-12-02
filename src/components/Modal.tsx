@@ -53,6 +53,7 @@ const ModalTextArea = styled.textarea<{ isMobile: boolean }>`
   height: 200px;
   background-color: #ffe5e5;
   padding: 15px;
+  color: black;
 `;
 
 const ModalWriter = styled.div<{ isMobile: boolean }>`
@@ -220,7 +221,8 @@ export const PrayModal: FC<{
   setPrayModal: Dispatch<SetStateAction<boolean>>;
   setSelectItem: Dispatch<SetStateAction<number>>;
   dataList: IItemProps[];
-}> = ({ show, setPrayModal, dataList, setSelectItem }) => {
+  week: number;
+}> = ({ show, setPrayModal, dataList, setSelectItem, week }) => {
   const [text, setText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [writer, setWriter] = useState("");
@@ -316,7 +318,7 @@ export const PrayModal: FC<{
               장식품 고르기
             </div>
             <div style={{ display: "flex", flexWrap: "wrap" }}>
-              {itemImg.map((img, index) => {
+              {itemImg[week].map((img, index) => {
                 return (
                   <ItemContainer
                     onClick={() => {
