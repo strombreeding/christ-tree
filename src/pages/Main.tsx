@@ -16,6 +16,7 @@ import ff from "../assets/tree_1.png";
 import { getCards, getNotice } from "../apis/read";
 import ScrollLineIndicator from "../components/ScrollLineIndicator";
 import AutoScrollBox from "../components/AutoScrollBox";
+import QuickPinchZoom, { make3dTransformValue } from "react-quick-pinch-zoom";
 interface IDivProps {
   width: number;
   height: number;
@@ -24,7 +25,7 @@ interface IDivProps {
 
 type IDataProps = IItemProps[];
 
-const Background = styled.div<IDivProps>`
+const Background = styled.img<IDivProps>`
   max-width: ${width}px;
   max-height: ${height}px;
   width: ${(props) => props.width}px;
@@ -124,7 +125,16 @@ const Main = () => {
   const [data, setData] = useState([] as IDataProps);
   const [scroll, setScroll] = useState({ x: 0, y: 0 });
 
+  const imgRef = useRef<HTMLImageElement | null>(null);
   const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const onUpdate = useCallback(({ x, y, scale }: Record<string, any>) => {
+    const { current: img } = imgRef;
+    if (img) {
+      const value = make3dTransformValue({ x, y, scale });
+
+      img.style.setProperty("transform", value);
+    }
+  }, []);
   const handleSearch = () => {
     const matchingItems = data.filter((item) => item.writer.includes(text));
 
@@ -221,7 +231,7 @@ const Main = () => {
   };
   if (!ready) return <></>;
   return (
-    <>
+    <QuickPinchZoom onUpdate={onUpdate}>
       <Background
         width={width}
         height={height}
@@ -230,6 +240,7 @@ const Main = () => {
             ? `${imagePath}/tree_${notice.week}.jpg`
             : `${imagePath}/tree_${1}.jpg`
         }
+        ref={imgRef}
       >
         <AutoScrollBox />
         <NaviContainer isMobile={isMobile} screenWidth={screenWidth}>
@@ -336,7 +347,7 @@ const Main = () => {
           );
         })}
       </Background>
-    </>
+    </QuickPinchZoom>
   );
 };
 
