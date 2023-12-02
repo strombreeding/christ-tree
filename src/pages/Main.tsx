@@ -209,6 +209,9 @@ const Main = () => {
       notice: notice.notice,
       week: notice.week,
     });
+    console.log(`
+      week : ${notice.week}
+    `);
     console.log(res);
     setData(res);
     itemsRef.current = itemsRef.current.slice(0, res.length);
