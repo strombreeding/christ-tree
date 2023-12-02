@@ -25,13 +25,14 @@ interface IDivProps {
 
 type IDataProps = IItemProps[];
 
-const Background = styled.img<IDivProps>`
+const Background = styled.div<IDivProps>`
   max-width: ${width}px;
   max-height: ${height}px;
   width: ${(props) => props.width}px;
   height: ${(props) => props.height}px;
   background-color: lightblue;
   background-image: url(${(props) => props.bgImage});
+  /* background-image: url(${(props) => props.bgImage}); */
   /* background-image: url(${(props) => props.bgImage}); */
   background-size: cover;
   background-position: center;
