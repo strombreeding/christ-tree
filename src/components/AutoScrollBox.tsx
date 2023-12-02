@@ -30,7 +30,7 @@ function AutoScrollBox() {
         이승미
         유수정
         주예경
-        장동민
+        그리고 장동민
     `;
 
   return (

@@ -136,7 +136,7 @@ export const Notice: FC<{
               marginTop: 5,
               marginBottom: 5,
               color: "blue",
-              fontSize: 16,
+              fontSize: 18,
               fontWeight: "bolder",
             }}
             onClick={() => {
@@ -248,7 +248,7 @@ export const PrayModal: FC<{
   const confirm = async () => {
     // 통신
     let copyWriter = writer;
-    if (writer.trim().length < 2) copyWriter = "익명";
+    if (writer.trim().length < 1) copyWriter = "익명";
     if (content.trim().length < 10)
       return alert("기도제목이 10자도 안된다고요? 말도안돼~");
     if (img.trim().length < 10) return alert("이미지 골라주셈");

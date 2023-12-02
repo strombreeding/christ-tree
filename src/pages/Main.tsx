@@ -232,7 +232,7 @@ const Main = () => {
   };
   if (!ready) return <></>;
   return (
-    <QuickPinchZoom onUpdate={onUpdate}>
+    <>
       <Background
         width={width}
         height={height}
@@ -348,7 +348,7 @@ const Main = () => {
           );
         })}
       </Background>
-    </QuickPinchZoom>
+    </>
   );
 };
 
