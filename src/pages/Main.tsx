@@ -16,7 +16,7 @@ import ff from "../assets/tree_1.png";
 import { getCards, getNotice } from "../apis/read";
 import ScrollLineIndicator from "../components/ScrollLineIndicator";
 import AutoScrollBox from "../components/AutoScrollBox";
-import QuickPinchZoom, { make3dTransformValue } from "react-quick-pinch-zoom";
+
 interface IDivProps {
   width: number;
   height: number;
@@ -128,14 +128,6 @@ const Main = () => {
 
   const imgRef = useRef<HTMLImageElement | null>(null);
   const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
-  const onUpdate = useCallback(({ x, y, scale }: Record<string, any>) => {
-    const { current: img } = imgRef;
-    if (img) {
-      const value = make3dTransformValue({ x, y, scale });
-
-      img.style.setProperty("transform", value);
-    }
-  }, []);
   const handleSearch = () => {
     const matchingItems = data.filter((item) => item.writer.includes(text));
 
