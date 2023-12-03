@@ -319,6 +319,11 @@ export const PrayModal: FC<{
             </div>
             <div style={{ display: "flex", flexWrap: "wrap" }}>
               {itemImg[week].map((img, index) => {
+                if (week < 0 || week > 4) {
+                  week = 0;
+                } else {
+                  week = week - 1;
+                }
                 return (
                   <ItemContainer
                     onClick={() => {
