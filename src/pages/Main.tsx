@@ -234,8 +234,8 @@ const Main = () => {
         height={height}
         bgImage={
           notice.week < 5 && notice.week > 0
-            ? `${imagePath}/tree_${notice.week}.jpg?${new Date().getTime()}`
-            : `${imagePath}/tree_${1}.jpg?${new Date().getTime()}`
+            ? `${imagePath}/tree_${notice.week}.jpg`
+            : `${imagePath}/tree_${1}.jpg`
         }
         ref={imgRef}
       >
