@@ -226,7 +226,6 @@ const Main = () => {
     }
   };
   if (!ready) return <></>;
-  notice.week++;
   return (
     <>
       <Background
